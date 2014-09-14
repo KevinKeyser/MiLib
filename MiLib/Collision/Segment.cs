@@ -10,9 +10,9 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    class Segment
+    public class Segment
     {
-        Vector2 pointA;
+        private Vector2 pointA;
         public Vector2 PointA
         {
             get
@@ -28,7 +28,7 @@ namespace MiLib.Collision
                 angleAB = Util.VectorToAngle(pointB - pointA) - MathHelper.PiOver2;
             }
         }
-        Vector2 pointB;
+        private Vector2 pointB;
         public Vector2 PointB
         {
             get
@@ -44,7 +44,7 @@ namespace MiLib.Collision
                 angleAB = Util.VectorToAngle(pointB - pointA) - MathHelper.PiOver2;
             }
         }
-        Vector2 origin;
+        private Vector2 origin;
         public Vector2 Origin
         {
             get
@@ -54,50 +54,93 @@ namespace MiLib.Collision
             set
             {
                 origin = value;
+                lengthOA = (origin - pointA).Length();
+                lengthOB = (origin - pointB).Length();
+                angleOA = Util.VectorToAngle(origin - pointA) - MathHelper.PiOver2;
+                angleOB = Util.VectorToAngle(origin - pointB) - MathHelper.PiOver2;
             }
         }
-        float angleOA;
-        float angleOB;
-        float angleAB;
-        float lengthOA;
-        float lengthOB;
-        float lengthAB;
-        Vector2 lineScale;
-        Texture2D texture;
+        private float scale;
+
+        public float Scale
+        {
+            get
+            {
+                return scale;
+            }
+            set
+            {
+                lengthOA /= scale;
+                lengthOB /= scale;
+                scale = value;
+                lengthOA *= value;
+                lengthOB *= value;
+                Vector2 angleVector = Util.AngleToVector(angleOA + MathHelper.PiOver2);
+                angleVector.Normalize();
+                pointA = origin - angleVector * lengthOA;
+
+                angleVector = Util.AngleToVector(angleOB + MathHelper.PiOver2);
+                angleVector.Normalize();
+                pointB = origin - angleVector * lengthOB;
+                lengthAB = (pointB - pointA).Length();
+                lineScale = new Vector2(lengthAB, 1f);
+            }
+        }
+
+        private Rotation rotation;
+
+        public Rotation Rotation
+        {
+            get
+            {
+                return rotation;
+            }
+            set
+            {
+                Rotation rot = rotation;
+                rotation = value;
+                angleOA += (value - rot).AsRadians();
+                angleOB += (value - rot).AsRadians();
+                angleAB += (value - rot).AsRadians();
+
+                Vector2 angleVector = Util.AngleToVector(angleOA + MathHelper.PiOver2);
+                angleVector.Normalize();
+                pointA = origin - angleVector * lengthOA;
+
+                angleVector = Util.AngleToVector(angleOB + MathHelper.PiOver2);
+                angleVector.Normalize();
+                pointB = origin - angleVector * lengthOB;
+            }
+        }
+
+        private float angleOA;
+        private float angleOB;
+        private float angleAB;
+        private float lengthOA;
+        private float lengthOB;
+        private float lengthAB;
+        private Vector2 lineScale;
+        private Texture2D texture;
 
         public Segment(Vector2 pointA, Vector2 pointB, GraphicsDevice graphics)
         : this(pointA, pointB, pointA, graphics) {}
         public Segment(Vector2 pointA, Vector2 pointB, Vector2 origin, GraphicsDevice graphics)
         {
-            int textureSize = 2;
-            texture = new Texture2D(graphics, textureSize, textureSize, false, SurfaceFormat.Color);
-            texture.SetData<Color>(Enumerable.Repeat<Color>(Color.White, textureSize * textureSize).ToArray<Color>());
+            texture = new Texture2D(graphics, 1, 1);
+            texture.SetData<Color>(new Color[] { Color.White });
             this.pointA = pointA;
             this.pointB = pointB;
             this.origin = origin;
-
+            scale = 1f;
             lengthOA = (origin - pointA).Length();
             lengthOB = (origin - pointB).Length();
             lengthAB = (pointB - pointA).Length();
             angleOA = Util.VectorToAngle(origin - pointA) - MathHelper.PiOver2;
             angleOB = Util.VectorToAngle(origin - pointB) - MathHelper.PiOver2;
             angleAB = Util.VectorToAngle(pointB - pointA) - MathHelper.PiOver2;
-            lineScale = new Vector2(lengthAB / textureSize, .5f);
+            lineScale = new Vector2(lengthAB, 1f);
         }
-        public void Rotation(float rotation)
-        {
-            angleOA += rotation;
-            angleOB += rotation;
-            angleAB += rotation;
 
-            Vector2 angleVector = Util.AngleToVector(angleOA + MathHelper.PiOver2);
-            angleVector.Normalize();
-            pointA = origin - angleVector * lengthOA;
-
-            angleVector = Util.AngleToVector(angleOB + MathHelper.PiOver2);
-            angleVector.Normalize();
-            pointB = origin - angleVector * lengthOB;
-        }
         public void Move(Vector2 translation)
         {
             pointA += translation;

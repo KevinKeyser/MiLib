@@ -13,7 +13,7 @@ namespace MiLib.Collision
     /* Todo:
      * add scaling corresponding to origin
      */
-    class Polygon
+    public class Polygon
     {
         public Vector2[] vertices;
         public Segment[] segments;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,9 @@ using System.Text;
 
 namespace MiLib.Collision
 {
-    class RectangleF
+    public class RectangleOBB
     {
         private Vector2 position;
-
         public float X
         {
             get { return position.X; }
@@ -36,8 +36,8 @@ namespace MiLib.Collision
             set { size.Y = value; }
         }
 
-        public RectangleF() : this(0, 0, 0, 0){ }
-        public RectangleF(float x, float y, float width, float height)
+        public RectangleOBB() : this(0, 0, 0, 0){ }
+        public RectangleOBB(float x, float y, float width, float height)
         {
             position = new Vector2(x, y);
             size = new Vector2(width, height);

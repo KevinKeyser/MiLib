@@ -8,7 +8,7 @@ using MiLib.CoreTypes;
 
 namespace MiLib.UserInterface
 {
-    class Label
+    public class Label
     {
     }
 }

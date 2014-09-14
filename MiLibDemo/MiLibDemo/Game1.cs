@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using MiLib.Collision;
+
 namespace MiLibDemo
 {
     /// <summary>
@@ -18,6 +20,7 @@ namespace MiLibDemo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        RectangleAABB shape;
 
         public Game1()
         {
@@ -34,7 +37,7 @@ namespace MiLibDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -46,7 +49,8 @@ namespace MiLibDemo
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            shape = new RectangleAABB(GraphicsDevice, new Vector2(200, 200), new Vector2(100, 100), new Vector2(250, 250));
+            shape.Debug = true;
             // TODO: use this.Content to load your game content here
         }
 
@@ -69,8 +73,8 @@ namespace MiLibDemo
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
-            // TODO: Add your update logic here
+            shape.Scale += .001f;
+            shape.Rotation += new MiLib.CoreTypes.Rotation(1, MiLib.CoreTypes.AngleMeasure.Degrees);
 
             base.Update(gameTime);
         }
@@ -84,6 +88,11 @@ namespace MiLibDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            shape.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

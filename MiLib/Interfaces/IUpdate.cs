@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MiLib.Interfaces
 {
-    interface IUpdate
+    public interface IUpdate
     {
         bool isUpdating { get; set; }
 

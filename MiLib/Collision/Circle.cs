@@ -10,7 +10,7 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    class Circle
+    public class Circle
     {
         public Vector2 Position;
         public float Radius;
@@ -19,9 +19,8 @@ namespace MiLib.Collision
 
         public Circle(Vector2 position, float radius, GraphicsDevice graphics)
         {
-            int textureSize = 2;
-            texture = new Texture2D(graphics, textureSize, textureSize, false, SurfaceFormat.Color);
-            texture.SetData<Color>(Enumerable.Repeat<Color>(Color.White, textureSize * textureSize).ToArray<Color>());
+            texture = new Texture2D(graphics, 1, 1);
+            texture.SetData<Color>(new Color[]{ Color.White });
             
             Position = position;
             Radius = radius;

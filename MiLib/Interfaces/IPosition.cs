@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MiLib.Interfaces
 {
-    interface IPosition
+    public interface IPosition
     {
         float X { get; set; }
         float Y { get; set; }

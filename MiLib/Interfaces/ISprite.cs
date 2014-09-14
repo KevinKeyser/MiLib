@@ -9,7 +9,7 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Interfaces
 {
-    interface ISprite : IPosition, IUpdate, IDraw
+    public interface ISprite : IPosition, IUpdate, IDraw
     {
         Vector2 Position { get; set; }
 

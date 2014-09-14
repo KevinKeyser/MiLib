@@ -10,7 +10,7 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    class Triangle
+    public class Triangle
     {
         public Vector2[] vertices = new Vector2[3];
         public Segment[] segments = new Segment[3];

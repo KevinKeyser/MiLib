@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MiLib.Interfaces
 {
-    interface IDraw
+    public interface IDraw
     {
         bool isVisible { get; set; }
 

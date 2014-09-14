@@ -10,7 +10,7 @@ using MiLib.Interfaces;
 
 namespace MiLib.CoreTypes
 {
-    class Sprite : ISprite
+    public class Sprite : ISprite
     {
         #region Variables
         public virtual Texture2D Texture { get; set; }
@@ -55,7 +55,9 @@ namespace MiLib.CoreTypes
             }
         }
 
-        public virtual Rectangle Bounds { get; set; }
+        private Rectangle bounds;
+
+        public virtual Rectangle Bounds { get { return bounds; } set { bounds = value; } }
 
         public virtual Color Color { get; set; }
 
@@ -91,10 +93,10 @@ namespace MiLib.CoreTypes
         {
             if (isUpdating)
             {
-                Bounds.X = (int)(position.X - Origin.X);
-                Bounds.Y = (int)(position.Y - Origin.Y);
-                Bounds.Width = (int)(Texture.Width * Scale.X);
-                Bounds.Height = (int)(Texture.Height * Scale.Y);
+                bounds.X = (int)(position.X - Origin.X);
+                bounds.Y = (int)(position.Y - Origin.Y);
+                bounds.Width = (int)(Texture.Width * Scale.X);
+                bounds.Height = (int)(Texture.Height * Scale.Y);
             }
         }
 

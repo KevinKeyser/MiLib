@@ -66,23 +66,35 @@ namespace MiLib.CoreTypes
         {
             return new Rotation(rotation.Angle * divide);
         }
+
+        public static Rotation operator +(Rotation rotation1, Rotation rotation2)
+        {
+            return new Rotation(rotation1.Angle + (rotation1.Measurements == AngleMeasure.Degrees ? rotation2.AsDegrees() : rotation2.AsRadians()));
+        }
+
+        public static Rotation operator -(Rotation rotation1, Rotation rotation2)
+        {
+            return new Rotation(rotation1.Angle - (rotation1.Measurements == AngleMeasure.Degrees ? rotation2.AsDegrees() : rotation2.AsRadians()));
+        }
+
+        public static Rotation operator *(Rotation rotation1, Rotation rotation2)
+        {
+            return new Rotation(rotation1.Angle * (rotation1.Measurements == AngleMeasure.Degrees ? rotation2.AsDegrees() : rotation2.AsRadians()));
+        }
+
+        public static Rotation operator /(Rotation rotation1, Rotation rotation2)
+        {
+            return new Rotation(rotation1.Angle * (rotation1.Measurements == AngleMeasure.Degrees ? rotation2.AsDegrees() : rotation2.AsRadians()));
+        }
         
         public static bool operator ==(Rotation rotation1, Rotation rotation2)
         {
-            return rotation1.Angle == rotation2.Angle && rotation1.measurements == rotation2.measurements || 
-                rotation1.measurements == AngleMeasure.Degrees && rotation2.measurements == AngleMeasure.Radians &&
-                rotation1.Angle == MathHelper.ToDegrees(rotation2.Angle) ||
-                rotation1.measurements == AngleMeasure.Radians && rotation2.measurements == AngleMeasure.Degrees &&
-                rotation1.Angle == MathHelper.ToRadians(rotation2.Angle);
+            return rotation1.AsRadians() == rotation2.AsRadians();
         }
 
         public static bool operator !=(Rotation rotation1, Rotation rotation2)
         {
-            return rotation1.Angle == rotation2.Angle && rotation1.measurements != rotation2.measurements ||
-                rotation1.measurements == AngleMeasure.Degrees && rotation2.measurements == AngleMeasure.Radians &&
-                rotation1.Angle != MathHelper.ToDegrees(rotation2.Angle) ||
-                rotation1.measurements == AngleMeasure.Radians && rotation2.measurements == AngleMeasure.Degrees &&
-                rotation1.Angle != MathHelper.ToRadians(rotation2.Angle); ;
+            return rotation1.AsRadians() != rotation2.AsRadians();
         }
 
         public override bool Equals(object obj)
