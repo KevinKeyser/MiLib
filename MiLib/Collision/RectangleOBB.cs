@@ -36,16 +36,27 @@ namespace MiLib.Collision
             set { size.Y = value; }
         }
 
-        public RectangleOBB() : this(0, 0, 0, 0){ }
+        public RectangleOBB() : this(0, 0, 0, 0) { }
         public RectangleOBB(float x, float y, float width, float height)
         {
             position = new Vector2(x, y);
             size = new Vector2(width, height);
         }
 
+        [Obsolete]
         public Rectangle ToRectangle()
         {
-            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+            return (Rectangle)this;
+        }
+
+        public static explicit operator Rectangle(RectangleOBB rect)
+        {
+            if (rect == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
         }
     }
 }

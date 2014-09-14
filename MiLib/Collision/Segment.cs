@@ -60,6 +60,21 @@ namespace MiLib.Collision
                 angleOB = Util.VectorToAngle(origin - pointB) - MathHelper.PiOver2;
             }
         }
+
+        public Vector2 Position
+        {
+            get
+            {
+                return origin;
+            }
+            set
+            {
+                Vector2 oldorigin = value - origin;
+                origin = value;
+                PointA += oldorigin;
+                PointB += oldorigin;
+            }
+        }
         private float scale;
 
         public float Scale
@@ -141,12 +156,6 @@ namespace MiLib.Collision
             lineScale = new Vector2(lengthAB, 1f);
         }
 
-        public void Move(Vector2 translation)
-        {
-            pointA += translation;
-            pointB += translation;
-            origin += translation;
-        }
         private bool colinearOnSegment(Vector2 p, Vector2 q, Vector2 r)
         {
             if (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&

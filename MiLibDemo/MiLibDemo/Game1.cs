@@ -21,6 +21,8 @@ namespace MiLibDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         RectangleAABB shape;
+        float scaleamount = .01f;
+        Vector2 speed = new Vector2(5);
 
         public Game1()
         {
@@ -73,9 +75,31 @@ namespace MiLibDemo
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            shape.Scale += .001f;
-            shape.Rotation += new MiLib.CoreTypes.Rotation(1, MiLib.CoreTypes.AngleMeasure.Degrees);
+            shape.Scale += scaleamount;
 
+            if(shape.Scale >= 2 || shape.Scale < 0.5f)
+            {
+                scaleamount *= -1;
+            }
+            shape.Rotation += new MiLib.CoreTypes.Rotation(1, MiLib.CoreTypes.AngleMeasure.Degrees);
+            shape.Position += speed;
+
+            if(shape.Bounds.X <= 0)
+            {
+                speed.X = Math.Abs(speed.X);
+            }
+            else if(shape.Bounds.X + shape.Bounds.Width >= GraphicsDevice.Viewport.Width)
+            {
+                speed.X = -Math.Abs(speed.X);
+            }
+            if (shape.Bounds.Y <= 0)
+            {
+                speed.Y = Math.Abs(speed.Y);
+            }
+            else if (shape.Bounds.Y + shape.Bounds.Height >= GraphicsDevice.Viewport.Height)
+            {
+                speed.Y = -Math.Abs(speed.Y);
+            }
             base.Update(gameTime);
         }
 

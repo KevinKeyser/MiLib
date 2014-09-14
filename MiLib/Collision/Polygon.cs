@@ -65,7 +65,7 @@ namespace MiLib.Collision
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i] += translation;
-                segments[i].Move(translation);
+                segments[i].Position += translation;
             }
             for (int i = 0; i < triangles.Length; i++)
             {

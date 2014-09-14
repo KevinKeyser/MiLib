@@ -53,7 +53,7 @@ namespace MiLib.Collision
             for(int i = 0; i < vertices.Length; i++)
             {
                 vertices[i] += translation;
-                segments[i].Move(translation);
+                segments[i].Position += translation;
             }
             origin += translation;
             bounds.X += (int)translation.X;

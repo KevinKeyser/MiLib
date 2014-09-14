@@ -22,18 +22,21 @@ namespace MiLib.Collision
             get { return position; }
             set
             {
-                Vector2 oldPosition = position;
                 position = value;
-                for (int i = 0; i < boundsSegments.Length; i++)
-                {
-                    boundsSegments[i].PointA += position - oldPosition;
-                    boundsSegments[i].PointB += position - oldPosition;
-                    boundsSegments[i].Origin += position - oldPosition;
-                }
+                float width = float.MinValue;
+                float height = float.MinValue;
+                float x = float.MaxValue;
+                float y = float.MaxValue;
                 for (int i = 0; i < segments.Length; i++)
                 {
-                    segments[i].Move(position - oldPosition);
+                    segments[i].Position = value;
+                    vertices[i] = segments[i].PointA;
+                    x = vertices[i].X < x ? vertices[i].X : x;
+                    y = vertices[i].Y < y ? vertices[i].Y : y;
+                    width = vertices[i].X > width ? vertices[i].X : width;
+                    height = vertices[i].Y > height ? vertices[i].Y : height;
                 }
+                new RectangleOBB(x, y, width, height);
             }
         }
 
@@ -69,7 +72,14 @@ namespace MiLib.Collision
         public virtual Vector2 Origin
         {
             get { return origin; }
-            set { origin = value; }
+            set 
+            {
+                origin = value;
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    segments[i].Origin = value;
+                }
+            }
         }
 
         protected float scale;
@@ -109,7 +119,11 @@ namespace MiLib.Collision
             get { return segments; }
             set
             {
-                segments = value;
+                segments = new Segment[value.Length];
+                for (int i = 0; i < segments.Length; i ++)
+                {
+                    segments[i] = new Segment(value[i].PointA, value[i].PointB, origin, graphicsDevice);
+                }
                 verticeLength = new float[value.Length];
                 verticeAngles = new float[value.Length];
                 float width = float.MinValue;
@@ -161,11 +175,6 @@ namespace MiLib.Collision
             get { return bounds; }
             private set
             {
-                for (int i = 0; i < segments.Length; i++)
-                {
-                    segments[i].Origin = origin;
-                }
-                origin = new Vector2(value.X + value.Width / 2, value.Y + value.Height / 2);
                 bounds = value;
                 boundsSegments[0] = new Segment(new Vector2(value.X, value.Y), new Vector2(value.X + value.Width, value.Y), origin, graphicsDevice);
                 boundsSegments[1] = new Segment(new Vector2(value.X + value.Width, value.Y), new Vector2(value.X + value.Width, value.Y + value.Height), origin, graphicsDevice);
@@ -180,13 +189,14 @@ namespace MiLib.Collision
         {
             this.graphicsDevice = graphicsDevice;
             segments = new Segment[0];
-            scale = 1f;
             vertices = new Vector2[segments.Length];
             boundsSegments = new Segment[4];
+            scale = 1f;
             for (int i = 0; i < boundsSegments.Length; i++)
             {
                 boundsSegments[i] = new Segment(Vector2.Zero, Vector2.Zero, Vector2.Zero, graphicsDevice);
             }
+            Origin = Vector2.Zero;
             rotation = new CoreTypes.Rotation(0);
             bounds = new RectangleOBB();
             Debug = false;
