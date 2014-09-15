@@ -44,6 +44,15 @@ namespace MiLib.CoreTypes
             return true;
         }
 
+        public static bool PointInAABB(Vector2 point, Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+        {
+            if (Cross2D(point - A, B - A) > 0.0f) return false;
+            if (Cross2D(point - B, C - B) > 0.0f) return false;
+            if (Cross2D(point - C, D - C) > 0.0f) return false;
+            if (Cross2D(point - D, A - D) > 0.0f) return false;
+            return true;
+        }
+
         public static Vector2? ClosestPoint(Vector2 point, Vector2[] points)
         {
             Vector2? closest = null;

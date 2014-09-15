@@ -59,6 +59,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collision\Enum.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="Collision\Circle.cs" />
     <Compile Include="CoreTypes\Asset.cs" />

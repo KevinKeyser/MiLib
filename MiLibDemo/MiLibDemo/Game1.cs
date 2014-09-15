@@ -20,10 +20,10 @@ namespace MiLibDemo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Circle shape;
-        float scaleamount = .01f;
-        Vector2 speed = new Vector2(5);
-
+        RectangleAABB shape1;
+        RectangleAABB shape2;
+        SpriteFont font;
+        bool iscollide = false;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -51,8 +51,12 @@ namespace MiLibDemo
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            shape = new Circle(new Vector2(100), 100, GraphicsDevice);
-            shape.Debug = true;
+            shape1 = new RectangleAABB(new Vector2(100), new Vector2(100), new Vector2(150, 150), GraphicsDevice);
+            shape1.Debug = true;
+            shape2 = new RectangleAABB(new Vector2(100), new Vector2(100), new Vector2(150), GraphicsDevice);
+            shape2.Debug = true;
+
+            font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
         }
 
@@ -75,31 +79,44 @@ namespace MiLibDemo
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            shape.Scale += scaleamount;
 
-            if(shape.Scale >= 2 || shape.Scale < 0.5f)
-            {
-                scaleamount *= -1;
-            }
-            shape.Rotation += new MiLib.CoreTypes.Rotation(1, MiLib.CoreTypes.AngleMeasure.Degrees);
-            shape.Position += speed;
+            KeyboardState ks = Keyboard.GetState();
 
-            if(shape.Bounds.X <= 0)
+            if(ks.IsKeyDown(Keys.W))
             {
-                speed.X = Math.Abs(speed.X);
+                shape2.Position += new Vector2(0, -1);
             }
-            else if(shape.Bounds.X + shape.Bounds.Width >= GraphicsDevice.Viewport.Width)
+            if (ks.IsKeyDown(Keys.S))
             {
-                speed.X = -Math.Abs(speed.X);
+                shape2.Position += new Vector2(0, 1);
             }
-            if (shape.Bounds.Y <= 0)
+            if (ks.IsKeyDown(Keys.A))
             {
-                speed.Y = Math.Abs(speed.Y);
+                shape2.Position += new Vector2(-1, 0);
             }
-            else if (shape.Bounds.Y + shape.Bounds.Height >= GraphicsDevice.Viewport.Height)
+            if (ks.IsKeyDown(Keys.D))
             {
-                speed.Y = -Math.Abs(speed.Y);
+                shape2.Position += new Vector2(1, 0);
             }
+            if (ks.IsKeyDown(Keys.E))
+            {
+                shape2.Rotation += new MiLib.CoreTypes.Rotation(5, MiLib.CoreTypes.AngleMeasure.Degrees);
+            }
+            if (ks.IsKeyDown(Keys.Q))
+            {
+                shape2.Rotation += new MiLib.CoreTypes.Rotation(-5, MiLib.CoreTypes.AngleMeasure.Degrees);
+            }
+
+            if(shape2.Intersects(shape1))
+            {
+                iscollide = true;
+            }
+            else
+            {
+                iscollide = false;
+            }
+
+
             base.Update(gameTime);
         }
 
@@ -114,8 +131,10 @@ namespace MiLibDemo
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            shape.Draw(spriteBatch);
+            shape1.Draw(spriteBatch);
+            shape2.Draw(spriteBatch);
 
+            spriteBatch.DrawString(font, iscollide.ToString(), Vector2.Zero, Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);

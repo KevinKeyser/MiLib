@@ -16,7 +16,7 @@ namespace MiLib.Collision
             : base(graphicsDevice)
         {
             Position = position;
-            Origin = origin;
+            Origin = position;
             Segment[] temp = new Segment[(int)radius * 2 + 2];
             Segment[] temp2 = new Segment[(int)radius * 2 + 2];
             float x = -radius;
@@ -48,27 +48,6 @@ namespace MiLib.Collision
             }
             total[total.Length - 1] = new Segment(total[total.Length - 2].PointB, total[total.Length - 3].PointB, origin, graphicsDevice);
             Segments = total;
-        }
-
-        public bool Intersects(Polygon poly)
-        {
-
-            Vector2? closest = Util.ClosestPoint(Position, poly.Vertices);
-            if(closest.HasValue)
-            {
-                return Vector2.DistanceSquared(closest.Value, Position) <= Bounds.Width*Bounds.Width;
-            }
-            return false;
-        }
-
-        public bool Intersects(Circle circle)
-        {
-            return Vector2.DistanceSquared(Position, circle.Position) <= (Bounds.Width + circle.Bounds.Width) * (Bounds.Width + circle.Bounds.Width);
-        }
-
-        public Polygon toPolygon()
-        {
-            return new Polygon(segments, Position, graphicsDevice);
         }
     }
 }

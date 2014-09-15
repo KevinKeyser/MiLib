@@ -13,7 +13,14 @@ namespace MiLib.Collision
     public class Polygon : Shape
     {
 
-        Triangle[] triangles = new Triangle[0];
+        private Triangle[] triangles = new Triangle[0];
+
+        public Triangle[] Triangles
+        {
+            get { return triangles; }
+            protected set { triangles = value; }
+        }
+
         public override Vector2 Position
         {
             get
@@ -68,6 +75,7 @@ namespace MiLib.Collision
         public Polygon(Vector2[] vertices, Vector2 origin, GraphicsDevice graphicsDevice)
             : base(graphicsDevice)
         {
+            Position = origin;
             Origin = origin;
             Segment[] temp = new Segment[vertices.Length];
             for (int i = 0; i < vertices.Length; i++)
@@ -107,44 +115,10 @@ namespace MiLib.Collision
             if (low == 0 || high == vertices.Length) return false;
             return (Util.TriangleOrientation(vertices[low], vertices[high], point) == Order.CounterClockWise) ? true : false;
         }
-
-        public bool Intersects(Circle circle)
-        {
-
-            Vector2? closest = Util.ClosestPoint(circle.Position, vertices);
-            if (closest.HasValue)
-            {
-                return Vector2.DistanceSquared(closest.Value, circle.Position) <= circle.Bounds.Width * circle.Bounds.Width;
-            }
-            return false;
-        }
-
-        public bool Intersects(Triangle triangle)
-        {
-            for (int i = 0; i < triangle.Vertices.Length; i++)
-            {
-                    if (Intersects(triangle.Vertices[i])) return true;
-                for (int ii = 0; ii < vertices.Length; ii++)
-                {
-                    if (segments[ii].Intersects(triangle.Segments[i])) return true;
-                }
-            }
-            return false;
-        }
        
-        public bool Intersects(Polygon poly)
-        {
-            for (int i = 0; i < triangles.Length; i++)
-            {
-                for(int ii = 0; ii < poly.triangles.Length; ii++)
-                {
-                    if (triangles[i].Intersects(poly.triangles[ii]))
-                        return true;
-                }
-            }
-            return false;
-        }
-       void Triangulate(GraphicsDevice graphics, Vector2 origin)
+
+        //Gets stuck in Triangulation if format isnt proper
+        private void Triangulate(GraphicsDevice graphics, Vector2 origin)
        {
            int[] prev = new int[vertices.Length];
            int[] next =  new int[vertices.Length];

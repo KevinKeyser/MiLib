@@ -11,18 +11,16 @@ namespace MiLib.Collision
 {
     public class RectangleAABB : Shape
     {
-        public RectangleAABB(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, 0, 0, 0, 0, Vector2.Zero) { }
-        public RectangleAABB(GraphicsDevice graphicsDevice, float x, float y, float width, float height)
-            : this(graphicsDevice, x, y, width, height, Vector2.Zero) { }
-        public RectangleAABB(GraphicsDevice graphicsDevice, Vector2 position, Vector2 size)
-            : this(graphicsDevice, position.X, position.Y, size.X, size.Y, Vector2.Zero) { }
-        public RectangleAABB(GraphicsDevice graphicsDevice, Vector2 position, Vector2 size, Vector2 origin)
-            : this(graphicsDevice, position.X, position.Y, size.X, size.Y, origin) { }
-        public RectangleAABB(GraphicsDevice graphicsDevice, float x, float y, float width, float height, Vector2 origin)
+        public RectangleAABB(float x, float y, float width, float height, GraphicsDevice graphicsDevice)
+            : this(x, y, width, height, Vector2.Zero, graphicsDevice) { }
+        public RectangleAABB(Vector2 position, Vector2 size, GraphicsDevice graphicsDevice)
+            : this(position.X, position.Y, size.X, size.Y, Vector2.Zero, graphicsDevice) { }
+        public RectangleAABB(Vector2 position, Vector2 size, Vector2 origin, GraphicsDevice graphicsDevice)
+            : this(position.X, position.Y, size.X, size.Y, origin, graphicsDevice) { }
+        public RectangleAABB(float x, float y, float width, float height, Vector2 origin, GraphicsDevice graphicsDevice)
             : base(graphicsDevice)
         {
-            Position = new Vector2(x, y);
+            Position = origin;
             Origin = origin;
             Segments = new Segment[]{
                 new Segment(new Vector2(x, y), new Vector2(x + width, y), graphicsDevice),

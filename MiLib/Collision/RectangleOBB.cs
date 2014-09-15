@@ -43,6 +43,15 @@ namespace MiLib.Collision
             size = new Vector2(width, height);
         }
 
+        public bool Intersects(RectangleOBB rect)
+        {
+            if (X + Width < rect.X) return false;
+            if (Y + Height < rect.Y) return false;
+            if (rect.X + rect.Width < X) return false;
+            if (rect.Y + rect.Height < Y) return false;
+            return true;
+        }
+
         [Obsolete]
         public Rectangle ToRectangle()
         {
