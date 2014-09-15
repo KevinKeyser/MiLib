@@ -11,7 +11,7 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    public class Shape
+    public abstract class Shape
     {
         public bool Debug;
 
@@ -83,7 +83,7 @@ namespace MiLib.Collision
         }
 
         protected float scale;
-
+        //0 Scale breaks draw
         public virtual float Scale
         {
             get
@@ -184,7 +184,7 @@ namespace MiLib.Collision
         }
 
         private Segment[] boundsSegments;
-        private GraphicsDevice graphicsDevice;
+        protected GraphicsDevice graphicsDevice;
         public Shape(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
@@ -209,6 +209,14 @@ namespace MiLib.Collision
                 for(int i = 0; i < boundsSegments.Length; i++)
                 {
                     boundsSegments[i].Draw(spriteBatch);
+                }
+
+                for(int i = 0; i < segments.Length; i++)
+                {
+                    if(segments[i] != null)
+                    {
+                        segments[i].Draw(spriteBatch);
+                    }
                 }
             }
         }

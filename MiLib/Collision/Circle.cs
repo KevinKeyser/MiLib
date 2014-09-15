@@ -10,58 +10,65 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    public class Circle
+    public class Circle : Shape
     {
-        public Vector2 Position;
-        public float Radius;
-        private Texture2D texture;
-        private Vector2[] points;
-
-        public Circle(Vector2 position, float radius, GraphicsDevice graphics)
+        public Circle(Vector2 position, float radius, GraphicsDevice graphicsDevice)
+            : base(graphicsDevice)
         {
-            texture = new Texture2D(graphics, 1, 1);
-            texture.SetData<Color>(new Color[]{ Color.White });
-            
             Position = position;
-            Radius = radius;
-            points = new Vector2[(int)(radius*20)];
-            float x = -Radius;
-            for(int i  = 0; i < points.Length; i++)
+            Origin = origin;
+            Segment[] temp = new Segment[(int)radius * 2 + 2];
+            Segment[] temp2 = new Segment[(int)radius * 2 + 2];
+            float x = -radius;
+            for(int i  = 0; i < temp.Length; i++)
             {
-                points[i] = new Vector2(x, (float)Math.Sqrt(Radius*Radius - x * x));
-                x += .1f;
+                float y = (float)Math.Sqrt(radius * radius - x * x);
+                if (i == 0)
+                {
+                    temp[i] = new Segment(new Vector2(position.X + x, position.Y - y), new Vector2(position.X + x, position.Y + y), position, graphicsDevice);
+                    temp2[i] = new Segment(temp[i].PointA, new Vector2(position.X + x, position.Y - y), position, graphicsDevice);
+                }
+                else if(i == temp.Length - 1)
+                {
+                    temp2[i] = new Segment(new Vector2(position.X + x, position.Y - y), new Vector2(position.X + x, position.Y + y), position, graphicsDevice);
+                    temp[i] = new Segment(temp2[i].PointB, new Vector2(position.X + x, position.Y - y), position, graphicsDevice);
+                }
+                else
+                {
+                    temp[i] = new Segment(temp[i - 1].PointB, new Vector2(position.X + x, position.Y + y), position, graphicsDevice);
+                    temp2[i] = new Segment(temp2[i - 1].PointB, new Vector2(position.X + x, position.Y - y), position, graphicsDevice);
+                }
+                x += 1f;
             }
+            Segment[] total = new Segment[temp.Length + temp2.Length + 1];
+            for(int i = 0, ii = 0; i < temp.Length; i++, ii+=2)
+            {
+                total[ii] = temp[i];
+                total[ii + 1] = temp2[i];
+            }
+            total[total.Length - 1] = new Segment(total[total.Length - 2].PointB, total[total.Length - 3].PointB, origin, graphicsDevice);
+            Segments = total;
         }
 
         public bool Intersects(Polygon poly)
         {
 
-            Vector2? closest = Util.ClosestPoint(Position, poly.vertices);
+            Vector2? closest = Util.ClosestPoint(Position, poly.Vertices);
             if(closest.HasValue)
             {
-                return Vector2.DistanceSquared(closest.Value, Position) <= Radius*Radius;
+                return Vector2.DistanceSquared(closest.Value, Position) <= Bounds.Width*Bounds.Width;
             }
             return false;
         }
 
         public bool Intersects(Circle circle)
         {
-            return Vector2.DistanceSquared(Position, circle.Position) <= (Radius + circle.Radius) * (Radius + circle.Radius);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, Position, Color.Green);
-            for(int i = 0; i < points.Length; i++)
-            {
-                spriteBatch.Draw(texture, new Vector2(Position.X + points[i].X, Position.Y + points[i].Y), Color.Red);
-                spriteBatch.Draw(texture, new Vector2(Position.X + points[i].X, Position.Y - points[i].Y), Color.Red);
-            }
+            return Vector2.DistanceSquared(Position, circle.Position) <= (Bounds.Width + circle.Bounds.Width) * (Bounds.Width + circle.Bounds.Width);
         }
 
         public Polygon toPolygon()
         {
-            return new Polygon(points, Position, texture.GraphicsDevice);
+            return new Polygon(segments, Position, graphicsDevice);
         }
     }
 }

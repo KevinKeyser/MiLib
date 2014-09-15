@@ -10,87 +10,87 @@ using MiLib.CoreTypes;
 
 namespace MiLib.Collision
 {
-    /* Todo:
-     * add scaling corresponding to origin
-     */
-    public class Polygon
+    public class Polygon : Shape
     {
-        public Vector2[] vertices;
-        public Segment[] segments;
-        public float[] verticeAngles;
-        public float[] verticeLength;
-        public float rotTotal = 0;
-        public Vector2 origin;
-        Rectangle bounds;
 
         Triangle[] triangles = new Triangle[0];
-
-        public Polygon(Vector2[] vertices, GraphicsDevice graphics)
-        : this(vertices, Vector2.Zero, graphics) {}
-
-        public Polygon(Vector2[] vertices, Vector2 origin, GraphicsDevice graphics)
+        public override Vector2 Position
         {
-            segments = new Segment[vertices.Length];
-            verticeAngles = new float[vertices.Length];
-            verticeLength = new float[vertices.Length];
-            this.vertices = vertices;
-            bounds = new Rectangle(int.MaxValue, int.MaxValue, 0, 0);
-            foreach (Vector2 vertice in vertices)
+            get
             {
-                if (bounds.X > vertice.X) bounds.X = (int)vertice.X;
-                if (bounds.Y > vertice.Y) bounds.Y = (int)vertice.Y;
-                if (bounds.Width < vertice.X) bounds.Width = (int)vertice.X;
-                if (bounds.Height < vertice.X) bounds.Height = (int)vertice.Y;
+                return base.Position;
             }
-            bounds.Height -= bounds.Y;
-            bounds.Width -= bounds.X;
-            this.origin = origin;
-            Triangulate(graphics, origin);
+            set
+            {
+                base.Position = value;
+                for (int i = 0; i < triangles.Length; i++)
+                {
+                    triangles[i].Position = value;
+                }
+            }
+        }
+
+        public override Rotation Rotation
+        {
+            get
+            {
+                return base.Rotation;
+            }
+            set
+            {
+                base.Rotation = value;
+                for (int i = 0; i < triangles.Length; i++)
+                {
+                    triangles[i].Rotation = value;
+                }
+            }
+        }
+
+        public override float Scale
+        {
+            get
+            {
+                return base.Scale;
+            }
+            set
+            {
+                base.Scale = value;
+                for (int i = 0; i < triangles.Length; i++)
+                {
+                    triangles[i].Scale = value;
+                }
+            }
+        }
+
+        public Polygon(Vector2[] vertices, GraphicsDevice graphicsDevice)
+            : this(vertices, Vector2.Zero, graphicsDevice) {}
+
+        public Polygon(Vector2[] vertices, Vector2 origin, GraphicsDevice graphicsDevice)
+            : base(graphicsDevice)
+        {
+            Origin = origin;
+            Segment[] temp = new Segment[vertices.Length];
             for (int i = 0; i < vertices.Length; i++)
             {
                 if (i != vertices.Length - 1)
                 {
-                    segments[i] = new Segment(vertices[i], vertices[i + 1], origin, graphics);
+                    temp[i] = new Segment(vertices[i], vertices[i + 1], origin, graphicsDevice);
                 }
                 else
                 {
-                    segments[i] = new Segment(vertices[i], vertices[0], origin, graphics);
+                    temp[i] = new Segment(vertices[i], vertices[0], origin, graphicsDevice);
                 }
-                verticeLength[i] = (vertices[i] - origin).Length();
-                verticeAngles[i] = Util.VectorToAngle(vertices[i] - origin);
             }
-        }
-        public void Move(Vector2 translation)
-        {
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                vertices[i] += translation;
-                segments[i].Position += translation;
-            }
-            for (int i = 0; i < triangles.Length; i++)
-            {
-                triangles[i].Move(translation);
-            }
-            origin += translation;
-            bounds.X += (int)translation.X;
-            bounds.Y += (int)translation.Y;
+            Segments = temp;
+            Triangulate(graphicsDevice, origin);
         }
 
-        public void Rotation(float degrees)
+        public Polygon(Segment[] segments, Vector2 origin, GraphicsDevice graphicsDevice)
+            : base(graphicsDevice)
         {
-            rotTotal += degrees;
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                Vector2 angleVector = Util.AngleToVector(rotTotal + verticeAngles[i]);
-                angleVector.Normalize();
-                vertices[i] = origin + angleVector * verticeLength[i];
-                segments[i].PointA = vertices[i];
-                segments[i].PointB = (i == vertices.Length - 1) ? vertices[0] : vertices[i + 1];
-            }
-            for (int i = 0; i < triangles.Length; i++)
-            {
-                triangles[i].Rotation(degrees);   
-            }
+            Origin = origin;
+            Segments = segments;
+            Triangulate(graphicsDevice, origin);
         }
 
         public bool Intersects(Vector2 point)
@@ -114,19 +114,19 @@ namespace MiLib.Collision
             Vector2? closest = Util.ClosestPoint(circle.Position, vertices);
             if (closest.HasValue)
             {
-                return Vector2.DistanceSquared(closest.Value, circle.Position) <= circle.Radius * circle.Radius;
+                return Vector2.DistanceSquared(closest.Value, circle.Position) <= circle.Bounds.Width * circle.Bounds.Width;
             }
             return false;
         }
 
         public bool Intersects(Triangle triangle)
         {
-            for (int i = 0; i < triangle.vertices.Length; i++)
+            for (int i = 0; i < triangle.Vertices.Length; i++)
             {
-                    if (Intersects(triangle.vertices[i])) return true;
+                    if (Intersects(triangle.Vertices[i])) return true;
                 for (int ii = 0; ii < vertices.Length; ii++)
                 {
-                    if (segments[ii].Intersects(triangle.segments[i])) return true;
+                    if (segments[ii].Intersects(triangle.Segments[i])) return true;
                 }
             }
             return false;
@@ -208,16 +208,16 @@ namespace MiLib.Collision
             prev[next[i]] = prev[i];
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < vertices.Length; i++)
+            if (Debug)
             {
-                segments[i].Draw(spriteBatch);
+                for (int i = 0; i < triangles.Length; i++)
+                {
+                    triangles[i].Draw(spriteBatch);
+                }
             }
-            for (int i = 0; i < triangles.Length; i++)
-            {
-                triangles[i].Draw(spriteBatch);
-            }
+            base.Draw(spriteBatch);
         }
     }
 }

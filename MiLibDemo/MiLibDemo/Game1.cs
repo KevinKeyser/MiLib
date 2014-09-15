@@ -20,7 +20,7 @@ namespace MiLibDemo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        RectangleAABB shape;
+        Circle shape;
         float scaleamount = .01f;
         Vector2 speed = new Vector2(5);
 
@@ -51,7 +51,7 @@ namespace MiLibDemo
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            shape = new RectangleAABB(GraphicsDevice, new Vector2(200, 200), new Vector2(100, 100), new Vector2(250, 250));
+            shape = new Circle(new Vector2(100), 100, GraphicsDevice);
             shape.Debug = true;
             // TODO: use this.Content to load your game content here
         }

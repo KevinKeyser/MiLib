@@ -31,17 +31,5 @@ namespace MiLib.Collision
                 new Segment(new Vector2(x, y + height), new Vector2(x, y), graphicsDevice)
             };
         }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if (Debug)
-            {
-                for (int i = 0; i < segments.Length; i++ )
-                {
-                    segments[i].Draw(spriteBatch);
-                }
-            }
-            base.Draw(spriteBatch);
-        }
     }
 }
