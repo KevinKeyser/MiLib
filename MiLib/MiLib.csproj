@@ -77,8 +77,8 @@
     <Compile Include="CoreTypes\Rotation.cs" />
     <Compile Include="CoreTypes\Sprite.cs" />
     <Compile Include="CoreTypes\Util.cs" />
-    <Compile Include="Collision\RectangleAABB.cs" />
     <Compile Include="Collision\RectangleOBB.cs" />
+    <Compile Include="Collision\RectangleAABB.cs" />
     <Compile Include="Collision\Segment.cs" />
     <Compile Include="Collision\Shape.cs" />
     <Compile Include="Collision\Triangle.cs" />

@@ -20,8 +20,8 @@ namespace MiLib.Collision
         WithCircle = 2,
         Triangle = 4,
         WithTriangle = 8,
-        RectangleAABB = 16,
-        WithRectangleAABB = 32,
+        RectangleOBB = 16,
+        WithRectangleOBB = 32,
         Polygon = 64,
         WithPolygon = 128
     }

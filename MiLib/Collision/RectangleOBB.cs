@@ -1,71 +1,33 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MiLib.Collision
 {
-    public class RectangleOBB
+    public class RectangleOBB : Shape
     {
-        private Vector2 position;
-        public float X
+        public RectangleOBB(float x, float y, float width, float height, GraphicsDevice graphicsDevice)
+            : this(x, y, width, height, Vector2.Zero, graphicsDevice) { }
+        public RectangleOBB(Vector2 position, Vector2 size, GraphicsDevice graphicsDevice)
+            : this(position.X, position.Y, size.X, size.Y, Vector2.Zero, graphicsDevice) { }
+        public RectangleOBB(Vector2 position, Vector2 size, Vector2 origin, GraphicsDevice graphicsDevice)
+            : this(position.X, position.Y, size.X, size.Y, origin, graphicsDevice) { }
+        public RectangleOBB(float x, float y, float width, float height, Vector2 origin, GraphicsDevice graphicsDevice)
+            : base(graphicsDevice)
         {
-            get { return position.X; }
-            set { position.X = value; }
-        }
-
-        public float Y
-        {
-            get { return position.Y; }
-            set { position.Y = value; }
-        }
-
-        private Vector2 size;
-
-        public float Width
-        {
-            get { return size.X; }
-            set { size.X = value; }
-        }
-
-        public float Height
-        {
-            get { return size.Y; }
-            set { size.Y = value; }
-        }
-
-        public RectangleOBB() : this(0, 0, 0, 0) { }
-        public RectangleOBB(float x, float y, float width, float height)
-        {
-            position = new Vector2(x, y);
-            size = new Vector2(width, height);
-        }
-
-        public bool Intersects(RectangleOBB rect)
-        {
-            if (X + Width < rect.X) return false;
-            if (Y + Height < rect.Y) return false;
-            if (rect.X + rect.Width < X) return false;
-            if (rect.Y + rect.Height < Y) return false;
-            return true;
-        }
-
-        [Obsolete]
-        public Rectangle ToRectangle()
-        {
-            return (Rectangle)this;
-        }
-
-        public static explicit operator Rectangle(RectangleOBB rect)
-        {
-            if (rect == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+            Position = origin;
+            Origin = origin;
+            Segments = new Segment[]{
+                new Segment(new Vector2(x, y), new Vector2(x + width, y), graphicsDevice),
+                new Segment(new Vector2(x + width, y), new Vector2(x + width, y + height), graphicsDevice),
+                new Segment(new Vector2(x + width, y + height), new Vector2(x, y + height), graphicsDevice),
+                new Segment(new Vector2(x, y + height), new Vector2(x, y), graphicsDevice)
+            };
         }
     }
 }

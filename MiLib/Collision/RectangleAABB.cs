@@ -1,33 +1,84 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MiLib.Collision
 {
-    public class RectangleAABB : Shape
+    public class RectangleAABB
     {
-        public RectangleAABB(float x, float y, float width, float height, GraphicsDevice graphicsDevice)
-            : this(x, y, width, height, Vector2.Zero, graphicsDevice) { }
-        public RectangleAABB(Vector2 position, Vector2 size, GraphicsDevice graphicsDevice)
-            : this(position.X, position.Y, size.X, size.Y, Vector2.Zero, graphicsDevice) { }
-        public RectangleAABB(Vector2 position, Vector2 size, Vector2 origin, GraphicsDevice graphicsDevice)
-            : this(position.X, position.Y, size.X, size.Y, origin, graphicsDevice) { }
-        public RectangleAABB(float x, float y, float width, float height, Vector2 origin, GraphicsDevice graphicsDevice)
-            : base(graphicsDevice)
+        private Vector2 position;
+        public float X
         {
-            Position = origin;
-            Origin = origin;
-            Segments = new Segment[]{
-                new Segment(new Vector2(x, y), new Vector2(x + width, y), graphicsDevice),
-                new Segment(new Vector2(x + width, y), new Vector2(x + width, y + height), graphicsDevice),
-                new Segment(new Vector2(x + width, y + height), new Vector2(x, y + height), graphicsDevice),
-                new Segment(new Vector2(x, y + height), new Vector2(x, y), graphicsDevice)
-            };
+            get { return position.X; }
+            set { position.X = value; }
+        }
+
+        public float Y
+        {
+            get { return position.Y; }
+            set { position.Y = value; }
+        }
+
+        private Vector2 size;
+
+        public float Width
+        {
+            get { return size.X; }
+            set { size.X = value; }
+        }
+
+        public float Height
+        {
+            get { return size.Y; }
+            set { size.Y = value; }
+        }
+
+        private Vector2 center;
+        public virtual Vector2 Center
+        {
+            get
+            {
+                return center;
+            }
+            protected set
+            {
+                center = value;
+            }
+        }
+        public RectangleAABB() : this(0, 0, 0, 0) { }
+        public RectangleAABB(float x, float y, float width, float height)
+        {
+            position = new Vector2(x, y);
+            size = new Vector2(width, height);
+            center = new Vector2(x + width / 2, y + height / 2);
+        }
+
+        public bool Intersects(RectangleAABB rect)
+        {
+            if (X + Width < rect.X) return false;
+            if (Y + Height < rect.Y) return false;
+            if (rect.X + rect.Width < X) return false;
+            if (rect.Y + rect.Height < Y) return false;
+            return true;
+        }
+
+        [Obsolete]
+        public Rectangle ToRectangle()
+        {
+            return (Rectangle)this;
+        }
+
+        public static explicit operator Rectangle(RectangleAABB rect)
+        {
+            if (rect == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
         }
     }
 }

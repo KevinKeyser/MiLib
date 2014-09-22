@@ -20,8 +20,8 @@ namespace MiLibDemo
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        RectangleAABB shape1;
-        RectangleAABB shape2;
+        RectangleOBB shape1;
+        RectangleOBB shape2;
         SpriteFont font;
         bool iscollide = false;
         public Game1()
@@ -51,9 +51,9 @@ namespace MiLibDemo
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            shape1 = new RectangleAABB(new Vector2(100), new Vector2(100), new Vector2(150, 150), GraphicsDevice);
+            shape1 = new RectangleOBB(new Vector2(100), new Vector2(200), new Vector2(200), GraphicsDevice);
             shape1.Debug = true;
-            shape2 = new RectangleAABB(new Vector2(100), new Vector2(100), new Vector2(150), GraphicsDevice);
+            shape2 = new RectangleOBB(new Vector2(100, 100), new Vector2(100, 100), new Vector2(150), GraphicsDevice);
             shape2.Debug = true;
 
             font = Content.Load<SpriteFont>("font");
@@ -105,6 +105,15 @@ namespace MiLibDemo
             if (ks.IsKeyDown(Keys.Q))
             {
                 shape2.Rotation += new MiLib.CoreTypes.Rotation(-5, MiLib.CoreTypes.AngleMeasure.Degrees);
+            }
+
+            if(ks.IsKeyDown(Keys.OemPlus))
+            {
+                shape2.Scale += .1f;
+            }
+            else if(ks.IsKeyDown(Keys.OemMinus))
+            {
+                shape2.Scale -= .1f;
             }
 
             if(shape2.Intersects(shape1))

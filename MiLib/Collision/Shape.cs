@@ -36,12 +36,14 @@ namespace MiLib.Collision
                     segments[i].Origin = origin;
                     vertices[i] = segments[i].PointA;
                 }
-                Bounds = new RectangleOBB(Bounds.X + oldposition.X, Bounds.Y + oldposition.Y, Bounds.Width, Bounds.Height);
+                Bounds = new RectangleAABB(Bounds.X + oldposition.X, Bounds.Y + oldposition.Y, Bounds.Width, Bounds.Height);
             }
         }
 
         protected Rotation rotation;
 
+
+        //Broken Negative Scale
         public virtual Rotation Rotation
         {
             get { return rotation; }
@@ -63,7 +65,7 @@ namespace MiLib.Collision
                 }
                 width -= x;
                 height -= y;
-                Bounds = new RectangleOBB(x, y, width, height);
+                Bounds = new RectangleAABB(x, y, width, height);
             }
         }
 
@@ -82,8 +84,11 @@ namespace MiLib.Collision
             }
         }
 
+        //fixes scale 0 for now
+        private bool scaleZero = false;
         protected float scale;
-        //0 Scale breaks draw
+
+        //Broken negative scale;
         public virtual float Scale
         {
             get
@@ -92,23 +97,31 @@ namespace MiLib.Collision
             }
             set
             {
-                scale = value;
-                float width = float.MinValue;
-                float height = float.MinValue;
-                float x = float.MaxValue;
-                float y = float.MaxValue;
-                for(int i = 0; i < segments.Length; i++)
+                if (value == 0)
                 {
-                    segments[i].Scale = value;
-                    vertices[i] = segments[i].PointA;
-                    x = vertices[i].X < x ? vertices[i].X : x;
-                    y = vertices[i].Y < y ? vertices[i].Y : y;
-                    width = vertices[i].X > width ? vertices[i].X : width;
-                    height = vertices[i].Y > height ? vertices[i].Y : height;
+                    scaleZero = true;
                 }
-                width -= x;
-                height -= y;
-                Bounds = new RectangleOBB(x, y, width, height);
+                else
+                {
+                    scaleZero = false;
+                    scale = value;
+                    float width = float.MinValue;
+                    float height = float.MinValue;
+                    float x = float.MaxValue;
+                    float y = float.MaxValue;
+                    for (int i = 0; i < segments.Length; i++)
+                    {
+                        segments[i].Scale = value;
+                        vertices[i] = segments[i].PointA;
+                        x = vertices[i].X < x ? vertices[i].X : x;
+                        y = vertices[i].Y < y ? vertices[i].Y : y;
+                        width = vertices[i].X > width ? vertices[i].X : width;
+                        height = vertices[i].Y > height ? vertices[i].Y : height;
+                    }
+                    width -= x;
+                    height -= y;
+                    Bounds = new RectangleAABB(x, y, width, height);
+                }
             }
         }
 
@@ -143,7 +156,7 @@ namespace MiLib.Collision
                 }
                 width -= x;
                 height -= y;
-                Bounds = new RectangleOBB(x, y, width, height);
+                Bounds = new RectangleAABB(x, y, width, height);
             }
         }
 
@@ -168,9 +181,9 @@ namespace MiLib.Collision
             get { return verticeLength; }
         }
 
-        protected RectangleOBB bounds;
+        protected RectangleAABB bounds;
 
-        public virtual RectangleOBB Bounds
+        public virtual RectangleAABB Bounds
         {
             get { return bounds; }
             private set
@@ -198,7 +211,7 @@ namespace MiLib.Collision
             }
             Origin = Vector2.Zero;
             rotation = new CoreTypes.Rotation(0);
-            bounds = new RectangleOBB();
+            bounds = new RectangleAABB();
             Debug = false;
 
             string shapeType = this.GetType().Name;
@@ -212,23 +225,23 @@ namespace MiLib.Collision
             collisionHandlers.Add(CollisionType.Triangle | CollisionType.WithCircle, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)o, (Triangle)s)));
             collisionHandlers.Add(CollisionType.Circle | CollisionType.WithPolygon, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)s, (Polygon)o)));
             collisionHandlers.Add(CollisionType.Polygon | CollisionType.WithCircle, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)o, (Polygon)s)));
-            collisionHandlers.Add(CollisionType.Circle | CollisionType.WithRectangleAABB, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)s, (RectangleAABB)o)));
-            collisionHandlers.Add(CollisionType.RectangleAABB | CollisionType.WithCircle, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)o, (RectangleAABB)s)));
+            collisionHandlers.Add(CollisionType.Circle | CollisionType.WithRectangleOBB, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)s, (RectangleOBB)o)));
+            collisionHandlers.Add(CollisionType.RectangleOBB | CollisionType.WithCircle, new Func<Shape, Shape, bool>((s, o) => intersects((Circle)o, (RectangleOBB)s)));
 
             //Triangles
             collisionHandlers.Add(CollisionType.Triangle | CollisionType.WithTriangle, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)s, (Triangle)o)));
-            collisionHandlers.Add(CollisionType.Triangle | CollisionType.WithRectangleAABB, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)s, (RectangleAABB)o)));
-            collisionHandlers.Add(CollisionType.RectangleAABB | CollisionType.WithTriangle, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)o, (RectangleAABB)s)));
+            collisionHandlers.Add(CollisionType.Triangle | CollisionType.WithRectangleOBB, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)s, (RectangleOBB)o)));
+            collisionHandlers.Add(CollisionType.RectangleOBB | CollisionType.WithTriangle, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)o, (RectangleOBB)s)));
             collisionHandlers.Add(CollisionType.Triangle | CollisionType.WithPolygon, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)s, (Polygon)o)));
             collisionHandlers.Add(CollisionType.Polygon | CollisionType.WithTriangle, new Func<Shape, Shape, bool>((s, o) => intersects((Triangle)o, (Polygon)s)));
 
             //Polygon
             collisionHandlers.Add(CollisionType.Polygon | CollisionType.WithPolygon, new Func<Shape, Shape, bool>((s, o) => intersects((Polygon)s, (Polygon)o)));
-            collisionHandlers.Add(CollisionType.Polygon | CollisionType.WithRectangleAABB, new Func<Shape, Shape, bool>((s, o) => intersects((Polygon)s, (RectangleAABB)o)));
-            collisionHandlers.Add(CollisionType.RectangleAABB | CollisionType.WithPolygon, new Func<Shape, Shape, bool>((s, o) => intersects((Polygon)o, (RectangleAABB)s)));
+            collisionHandlers.Add(CollisionType.Polygon | CollisionType.WithRectangleOBB, new Func<Shape, Shape, bool>((s, o) => intersects((Polygon)s, (RectangleOBB)o)));
+            collisionHandlers.Add(CollisionType.RectangleOBB | CollisionType.WithPolygon, new Func<Shape, Shape, bool>((s, o) => intersects((Polygon)o, (RectangleOBB)s)));
         
             //RectangleAABB
-            collisionHandlers.Add(CollisionType.RectangleAABB | CollisionType.WithRectangleAABB, new Func<Shape,Shape,bool>((s, o) => intersects((RectangleAABB)s, (RectangleAABB)o)));
+            collisionHandlers.Add(CollisionType.RectangleOBB | CollisionType.WithRectangleOBB, new Func<Shape,Shape,bool>((s, o) => intersects((RectangleOBB)s, (RectangleOBB)o)));
         }
 
         public bool Intersects(Shape other)
@@ -248,7 +261,7 @@ namespace MiLib.Collision
                         break;
 
                     case ShapeType.RectangleAABB:
-                        currentCollision |= CollisionType.WithRectangleAABB;
+                        currentCollision |= CollisionType.WithRectangleOBB;
                         break;
 
                     case ShapeType.Polygon:
@@ -275,7 +288,10 @@ namespace MiLib.Collision
             if (closest.HasValue)
             {
                 Vector2 v = closest.Value - circle.Position;
-                return Vector2.Dot(v, v) <= SqrRadius;
+                if(Vector2.Dot(v, v) <= SqrRadius)
+                {
+                    return true;
+                }
             }
             if (Util.PointInTriangle(circle.Position, triangle.Vertices[0], triangle.Vertices[1], triangle.Vertices[2]))
             {
@@ -283,36 +299,40 @@ namespace MiLib.Collision
             }
             for (int i = 0; i < triangle.Segments.Length; i++)
             {
-                //Problems Detecting Segments on circle;
             }
             return false;
         }
 
-        private bool intersects(Circle circle, RectangleAABB rect)
+        private bool intersects(Circle circle, RectangleOBB rect)
         {
-            Vector2? closest = Util.ClosestPoint(circle.Position, rect.Vertices);
-            if (closest.HasValue)
+            Vector2 d = circle.Position - rect.Bounds.Center;
+            // Start result at center of box; make steps from there
+            Vector2 closest = rect.Bounds.Center;
+            // For each OBB axis...
+            for (int i = 0; i < 2; i++)
             {
-                Vector2 v = closest.Value - circle.Position;
-                return Vector2.Dot(v, v) <= (circle.Bounds.Width / 2) * (circle.Bounds.Width / 2);
-            }
-            if (Util.PointInAABB(circle.Position, rect.Vertices[0], rect.Vertices[1], rect.Vertices[2], rect.Vertices[3]))
-            {
-                return true;
-            }
-            for (int i = 0; i < rect.Segments.Length; i++)
-            {
-                //Problems Detecting Segments on circle;
+                // ...project d onto that axis to get the distance
+                // along the axis of d from the box center
+                float dist = Vector2.Dot(d, new Vector2(rect.Bounds.X, rect.Bounds.Width + rect.Bounds.X);
+              
+                // If distance farther than the box extents, clamp to the box if (dist > b.e[i]) dist = b.e[i];
+                if (dist < -b.e[i]) dist = -b.e[i];
+                // Step that distance along the axis to get world coordinate
+                q += dist * b.u[i];
             }
             return false;
         }
 
         private bool intersects(Circle circle, Polygon poly)
         {
+            float SqrRadius = (circle.Bounds.Width / 2) * (circle.Bounds.Width / 2);
             Vector2? closest = Util.ClosestPoint(circle.Position, poly.Vertices);
             if (closest.HasValue)
             {
-                return Vector2.DistanceSquared(closest.Value, circle.Position) <= (circle.Bounds.Width / 2) * (circle.Bounds.Width / 2);
+                if(Vector2.DistanceSquared(closest.Value, circle.Position) <= SqrRadius)
+                {
+                    return true;
+                }
             }
             for (int i = 0; i < poly.Triangles.Length; i++ )
             {
@@ -345,7 +365,7 @@ namespace MiLib.Collision
             return false;
         }
 
-        private bool intersects(Triangle triangle, RectangleAABB rect)
+        private bool intersects(Triangle triangle, RectangleOBB rect)
         {
             for(int i = 0; i < triangle.Segments.Length; i++)
             {
@@ -360,7 +380,7 @@ namespace MiLib.Collision
                         return true;
                     }
                 }
-                if(Util.PointInAABB(triangle.Segments[i].PointA, rect.Vertices[0], rect.Vertices[1], rect.Vertices[2], rect.Vertices[3]))
+                if(Util.PointInOBB(triangle.Segments[i].PointA, rect.Vertices[0], rect.Vertices[1], rect.Vertices[2], rect.Vertices[3]))
                 {
                     return true;
                 }
@@ -397,7 +417,7 @@ namespace MiLib.Collision
             return false;
         }
 
-        private bool intersects(Polygon poly, RectangleAABB rect)
+        private bool intersects(Polygon poly, RectangleOBB rect)
         {
             for(int i = 0; i < poly.Triangles.Length; i++)
             {
@@ -410,12 +430,28 @@ namespace MiLib.Collision
         }
         #endregion
 
-        #region RectangleAABB
-        private bool intersects(RectangleAABB rect, RectangleAABB other)
+        #region RectangleOBB
+        private bool intersects(RectangleOBB rect, RectangleOBB other)
         {
-            if (rect.Bounds.X + rect.Bounds.Width < other.Bounds.X || other.Bounds.X + other.Bounds.Width < rect.Bounds.X) return false;
-            if (rect.Bounds.Y + rect.Bounds.Height < other.Bounds.Y || other.Bounds.Y + other.Bounds.Height < rect.Bounds.Y) return false;
-            return true;
+            if (Util.PointInOBB(rect.Bounds.Center, other.Vertices[0], other.Vertices[1], other.Vertices[2], other.Vertices[3]))
+            {
+                return true;
+            }
+            if (Util.PointInOBB(other.Bounds.Center, rect.Vertices[0], rect.Vertices[1], rect.Vertices[2], rect.Vertices[3]))
+            {
+                return true;
+            }
+            for (int i = 0; i < rect.Vertices.Length; i++)
+            {
+                for(int ii = 0; ii < other.Segments.Length; ii++)
+                {
+                    if(rect.Segments[i].Intersects(other.Segments[ii]))
+                    {
+                        return true;
+                    }
+                }
+            }
+                return false;
         }
         #endregion
 
@@ -427,10 +463,9 @@ namespace MiLib.Collision
                 {
                     boundsSegments[i].Draw(spriteBatch);
                 }
-
-                for (int i = 0; i < segments.Length; i++)
+                if (!scaleZero)
                 {
-                    if (segments[i] != null)
+                    for (int i = 0; i < segments.Length; i++)
                     {
                         segments[i].Draw(spriteBatch);
                     }
