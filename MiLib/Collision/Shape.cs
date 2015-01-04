@@ -309,17 +309,17 @@ namespace MiLib.Collision
             // Start result at center of box; make steps from there
             Vector2 closest = rect.Bounds.Center;
             // For each OBB axis...
-            for (int i = 0; i < 2; i++)
+           /* for (int i = 0; i < 2; i++)
             {
                 // ...project d onto that axis to get the distance
                 // along the axis of d from the box center
-                float dist = Vector2.Dot(d, new Vector2(rect.Bounds.X, rect.Bounds.Width + rect.Bounds.X);
+                float dist = Vector2.Dot(d, new Vector2(rect.Bounds.X, rect.Bounds.Width + rect.Bounds.X));
               
                 // If distance farther than the box extents, clamp to the box if (dist > b.e[i]) dist = b.e[i];
                 if (dist < -b.e[i]) dist = -b.e[i];
                 // Step that distance along the axis to get world coordinate
                 q += dist * b.u[i];
-            }
+            }*/
             return false;
         }
 
