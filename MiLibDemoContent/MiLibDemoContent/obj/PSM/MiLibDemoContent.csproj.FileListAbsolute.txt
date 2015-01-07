@@ -1,0 +1,5 @@
+C:\Users\Kevin\Documents\SourceTree\MiLib\MiLibDemoContent\MiLibDemoContent\bin\PSM\Content\font.xnb
+C:\Users\Kevin\Documents\SourceTree\MiLib\MiLibDemoContent\MiLibDemoContent\bin\PSM\IgnoreMe.dll
+C:\Users\Kevin\Documents\SourceTree\MiLib\MiLibDemoContent\MiLibDemoContent\obj\PSM\MiLibDemoContent.csprojResolveAssemblyReference.cache
+C:\Users\Kevin\Documents\SourceTree\MiLib\MiLibDemoContent\MiLibDemoContent\obj\PSM\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Kevin\Documents\SourceTree\MiLib\MiLibDemoContent\MiLibDemoContent\obj\PSM\IgnoreMe.dll

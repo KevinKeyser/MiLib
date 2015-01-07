@@ -260,7 +260,7 @@ namespace MiLib.Collision
                         currentCollision |= CollisionType.WithTriangle;
                         break;
 
-                    case ShapeType.RectangleAABB:
+                    case ShapeType.RectangleOBB:
                         currentCollision |= CollisionType.WithRectangleOBB;
                         break;
 

@@ -9,7 +9,7 @@ namespace MiLib.Collision
     {
         Circle,
         Triangle,
-        RectangleAABB,
+        RectangleOBB,
         Polygon
     }
 
