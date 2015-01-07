@@ -24,6 +24,10 @@ namespace MiLib.CoreTypes
 
 		static Vector2 mousePosition;
 		static Vector2 lastMousePosition;
+
+        static int lastMouseScroll;
+        static int mouseScroll; 
+
 		public static Vector2 MousePosition
 		{
 			get
@@ -40,14 +44,31 @@ namespace MiLib.CoreTypes
 			}
 		}
 
+        public static int MouseScroll
+        {
+            get
+            {
+                return mouseScroll;
+            }
+        }
+
+        public static int LastMouseScroll
+        {
+            get
+            {
+                return lastMouseScroll;
+            }
+        }
+
 		public static void Update ()
 		{
 			lastMouseState = mouseState;
 			lastKeyState = keyState;
 			lastMousePosition = mousePosition;
-
+            lastMouseScroll = mouseScroll;
 			mouseState = Mouse.GetState ();
 			keyState = Keyboard.GetState ();
+            mouseScroll = mouseState.ScrollWheelValue;
 			mousePosition = new Vector2(mouseState.X, mouseState.Y);
 			for (int i = 0; i < 4; i++) {
 				lastGamePadState [i] = gamePadState [i];
@@ -127,20 +148,40 @@ namespace MiLib.CoreTypes
             return mouseState.LeftButton == ButtonState.Pressed && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
 
+        public static bool IsLeftDown()
+        {
+            return mouseState.LeftButton == ButtonState.Pressed;
+        }
+
 		public static bool IsLeftClicked(Rectangle bounds)
 		{
             return mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
+
+        public static bool IsLeftClicked()
+        {
+            return mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released;
+        }
 
 		public static bool IsLeftReleased(Rectangle bounds)
 		{
             return mouseState.LeftButton == ButtonState.Released && lastMouseState.LeftButton == ButtonState.Pressed && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
 
+        public static bool IsLeftReleased()
+        {
+            return mouseState.LeftButton == ButtonState.Released && lastMouseState.LeftButton == ButtonState.Pressed;
+        }
+
 		public static bool IsLeftUp(Rectangle bounds)
 		{
-            return lastMouseState.LeftButton == ButtonState.Released && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
+            return mouseState.LeftButton == ButtonState.Released && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
+
+        public static bool IsLeftUp()
+        {
+            return mouseState.LeftButton == ButtonState.Released;
+        }
 		#endregion
 		#region Right
 		public static bool IsRightDown(Rectangle bounds)

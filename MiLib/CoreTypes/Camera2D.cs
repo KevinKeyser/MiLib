@@ -16,6 +16,14 @@ namespace MiLib.CoreTypes
         Rectangle? limits;
         Vector2 position;
 
+        public Viewport View
+        {
+            get
+            {
+                return view;
+            }
+        }
+
         public Vector2 Position
         {
             get

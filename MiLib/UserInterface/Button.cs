@@ -17,30 +17,21 @@ namespace MiLib.UserInterface
 {
 	public delegate void ButtonEvent(object sender, EventArgs e);
 
-	public class Button
+	public class Button : UIComponent
 	{
-		public Rectangle Bounds{ get; set; }
-
-		protected Vector2 position;
-		public Vector2 Position 
-		{ 
-			get
-			{ 
-				return position; 
-			}
+		public override Vector2 Position 
+		{
 			set 
 			{
-				position = value;
-				if (patch9 != null) {
-					patch9.Position = value;
-				}
+				patch9.Position = value;
+                base.Position = value;
 			}
 		}
 
-		public Texture2D Up { protected get; set; }
-		public Texture2D Down{ protected get; set; }
-		public Texture2D Hover{ protected get; set; }
-		public Texture2D Disabled{ protected get; set; }
+		public Texture2D Up { get; set; }
+		public Texture2D Down{ get; set; }
+		public Texture2D Hover{ get; set; }
+		public Texture2D Disabled{ get; set; }
 		public bool IsDisabled{ get; set; }
 
 		public Vector4 Patches
@@ -55,19 +46,23 @@ namespace MiLib.UserInterface
 			}
 		}
 
-		public virtual Vector2 Size 
+		public override Vector2 Size 
 		{
-			get
-			{
-				return patch9.Size;
-			}
 			set
 			{
-				if(value.X >= 0 && value.Y >= 0) patch9.Size = value;
+                if (value.X >= 0 && value.Y >= 0)
+                {
+                    patch9.Size = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Button - Size must be positive");
+                }
+                base.Size = value;
 			} 
 		}
 
-        public Color PatchColor
+        public Color ButtonColor
         {
             get
             {
@@ -150,24 +145,32 @@ namespace MiLib.UserInterface
 		#endregion
 
 		public Button (Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor)
-		{
-			if(up == null)
-			{
-				Debug.WriteLine("Button - Texture2D up cannot be null");
-			}
-			else if ((up.Bounds != down.Bounds && down != null) || (up.Bounds != hover.Bounds && hover != null) || (up.Bounds != disabled.Bounds && disabled != null)) {
-				Debug.WriteLine ("Button - Texture2D images must be the same size or null");
-			}
-			else
-			{
-				patch9 = new Patch9Image (Vector4.Zero, up, Vector2.Zero, buttonColor);
-				IsDisabled = false;
-				Up = up;
-				Down = down;
-				Hover = hover;
-				Disabled = disabled;
-			}
-		}
+            : this(up, down, hover, disabled, buttonColor, new Rectangle(0,0,0,0)) { }
+
+        public Button(Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor, Vector2 position, Vector2 size)
+            : this(up, down, hover, disabled, buttonColor, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y)) { }
+
+        public Button(Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor, Rectangle bounds)
+            : base(bounds)
+        {
+            if (up == null)
+            {
+                Debug.WriteLine("Button - Texture2D up cannot be null");
+            }
+            else if ((up.Bounds != down.Bounds && down != null) || (up.Bounds != hover.Bounds && hover != null) || (up.Bounds != disabled.Bounds && disabled != null))
+            {
+                Debug.WriteLine("Button - Texture2D images must be the same size or null");
+            }
+            else
+            {
+                patch9 = new Patch9Image(Vector4.Zero, up, Vector2.Zero, buttonColor);
+                IsDisabled = false;
+                Up = up;
+                Down = down;
+                Hover = hover;
+                Disabled = disabled;
+            }
+        }
 	
 		private void ChangeTexture(Texture2D texture)
 		{
@@ -176,7 +179,7 @@ namespace MiLib.UserInterface
 			}
 		}
 
-		public void Update(GameTime gameTime)
+		public override void Update(GameTime gameTime)
 		{
 			if (InputManager.IsDragged(Bounds)) {
 				InvokeEvent (Drag, InputManager.MouseDragAmount());
@@ -206,10 +209,9 @@ namespace MiLib.UserInterface
 			} else {
 				ChangeTexture (Up);
 			}
-			Bounds = new Rectangle ((int)Position.X, (int)Position.Y, (int)(Size.X), (int)(Size.Y));
 		}
 
-		public virtual void Draw(SpriteBatch spriteBatch)
+		public override void Draw(SpriteBatch spriteBatch)
 		{
 			patch9.Draw (spriteBatch);
 		}
