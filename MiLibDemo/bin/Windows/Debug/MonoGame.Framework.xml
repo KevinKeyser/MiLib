@@ -133,15 +133,15 @@
         </member>
         <member name="M:Microsoft.Xna.Framework.Color.ToVector3">
             <summary>
-            Gets a three-component <see cref="T:Microsoft.Xna.Framework.Vector3"/> representation for this object.
+            Returns the color in a 0-to-1 normalized <see cref="T:Microsoft.Xna.Framework.Vector3"/> format.
             </summary>
-            <returns>A three-component <see cref="T:Microsoft.Xna.Framework.Vector3"/> representation for this object.</returns>
+            <returns>A <see cref="T:Microsoft.Xna.Framework.Vector3"/> representation for this object.</returns>
         </member>
         <member name="M:Microsoft.Xna.Framework.Color.ToVector4">
             <summary>
-            Gets a four-component <see cref="T:Microsoft.Xna.Framework.Vector4"/> representation for this object.
+            Returns the color in a 0-to-1 normalized <see cref="T:Microsoft.Xna.Framework.Vector4"/> format.
             </summary>
-            <returns>A four-component <see cref="T:Microsoft.Xna.Framework.Vector4"/> representation for this object.</returns>
+            <returns>A <see cref="T:Microsoft.Xna.Framework.Vector4"/> representation for this object.</returns>
         </member>
         <member name="M:Microsoft.Xna.Framework.Color.ToString">
             <summary>
@@ -176,22 +176,22 @@
         </member>
         <member name="P:Microsoft.Xna.Framework.Color.B">
             <summary>
-            Gets or sets the blue component of <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            Gets or sets the blue component.
             </summary>
         </member>
         <member name="P:Microsoft.Xna.Framework.Color.G">
             <summary>
-            Gets or sets the green component of <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            Gets or sets the green component.
             </summary>
         </member>
         <member name="P:Microsoft.Xna.Framework.Color.R">
             <summary>
-            Gets or sets the red component of <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            Gets or sets the red component.
             </summary>
         </member>
         <member name="P:Microsoft.Xna.Framework.Color.A">
             <summary>
-            Gets or sets the alpha component of <see cref="T:Microsoft.Xna.Framework.Color"/>.
+            Gets or sets the alpha component.
             </summary>
         </member>
         <member name="P:Microsoft.Xna.Framework.Color.TransparentBlack">
@@ -1347,6 +1347,38 @@
             <param name="plane">The place to check</param>
             <returns>The perpendicular distance from the point to the plane</returns>
         </member>
+        <member name="M:Microsoft.Xna.Framework.Plane.Transform(Microsoft.Xna.Framework.Plane,Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Transforms a normalized plane by a matrix.
+            </summary>
+            <param name="plane">The normalized plane to transform.</param>
+            <param name="matrix">The transformation matrix.</param>
+            <returns>The transformed plane.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Plane.Transform(Microsoft.Xna.Framework.Plane@,Microsoft.Xna.Framework.Matrix@,Microsoft.Xna.Framework.Plane@)">
+            <summary>
+            Transforms a normalized plane by a matrix.
+            </summary>
+            <param name="plane">The normalized plane to transform.</param>
+            <param name="matrix">The transformation matrix.</param>
+            <param name="result">The transformed plane.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Plane.Transform(Microsoft.Xna.Framework.Plane,Microsoft.Xna.Framework.Quaternion)">
+            <summary>
+            Transforms a normalized plane by a quaternion rotation.
+            </summary>
+            <param name="plane">The normalized plane to transform.</param>
+            <param name="rotation">The quaternion rotation.</param>
+            <returns>The transformed plane.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Plane.Transform(Microsoft.Xna.Framework.Plane@,Microsoft.Xna.Framework.Quaternion@,Microsoft.Xna.Framework.Plane@)">
+            <summary>
+            Transforms a normalized plane by a quaternion rotation.
+            </summary>
+            <param name="plane">The normalized plane to transform.</param>
+            <param name="rotation">The quaternion rotation.</param>
+            <param name="result">The transformed plane.</param>
+        </member>
         <member name="T:Microsoft.Xna.Framework.Point">
             <summary>
             Describes a 2D-point.
@@ -1545,12 +1577,26 @@
             <param name="value">The coordinates to check for inclusion in this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.</param>
             <returns><c>true</c> if the provided <see cref="T:Microsoft.Xna.Framework.Point"/> lies inside this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>; <c>false</c> otherwise.</returns>
         </member>
+        <member name="M:Microsoft.Xna.Framework.Rectangle.Contains(Microsoft.Xna.Framework.Point@,System.Boolean@)">
+            <summary>
+            Gets whether or not the provided <see cref="T:Microsoft.Xna.Framework.Point"/> lies within the bounds of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="value">The coordinates to check for inclusion in this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.</param>
+            <param name="result"><c>true</c> if the provided <see cref="T:Microsoft.Xna.Framework.Point"/> lies inside this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>; <c>false</c> otherwise. As an output parameter.</param>
+        </member>
         <member name="M:Microsoft.Xna.Framework.Rectangle.Contains(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Gets whether or not the provided <see cref="T:Microsoft.Xna.Framework.Vector2"/> lies within the bounds of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
             </summary>
             <param name="value">The coordinates to check for inclusion in this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.</param>
             <returns><c>true</c> if the provided <see cref="T:Microsoft.Xna.Framework.Vector2"/> lies inside this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Rectangle.Contains(Microsoft.Xna.Framework.Vector2@,System.Boolean@)">
+            <summary>
+            Gets whether or not the provided <see cref="T:Microsoft.Xna.Framework.Vector2"/> lies within the bounds of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.
+            </summary>
+            <param name="value">The coordinates to check for inclusion in this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.</param>
+            <param name="result"><c>true</c> if the provided <see cref="T:Microsoft.Xna.Framework.Vector2"/> lies inside this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>; <c>false</c> otherwise. As an output parameter.</param>
         </member>
         <member name="M:Microsoft.Xna.Framework.Rectangle.Contains(Microsoft.Xna.Framework.Rectangle)">
             <summary>
@@ -1580,6 +1626,13 @@
             <returns>Hash code of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/>.</returns>
         </member>
         <member name="M:Microsoft.Xna.Framework.Rectangle.Inflate(System.Int32,System.Int32)">
+            <summary>
+            Adjusts the edges of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/> by specified horizontal and vertical amounts. 
+            </summary>
+            <param name="horizontalAmount">Value to adjust the left and right edges.</param>
+            <param name="verticalAmount">Value to adjust the top and bottom edges.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Rectangle.Inflate(System.Single,System.Single)">
             <summary>
             Adjusts the edges of this <see cref="T:Microsoft.Xna.Framework.Rectangle"/> by specified horizontal and vertical amounts. 
             </summary>
@@ -4913,40 +4966,210 @@
             A hash value which can be used to compare shaders.
             </summary>
         </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.SpriteBatch">
+            <summary>
+            Helper class for drawing text strings and sprites in one or more optimized batches.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.#ctor(Microsoft.Xna.Framework.Graphics.GraphicsDevice)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Xna.Framework.Graphics.SpriteBatch"/> class.
+            </summary>
+            <param name="graphicsDevice">The <see cref="T:Microsoft.Xna.Framework.Graphics.GraphicsDevice"/>, which will be used for sprite rendering.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="graphicsDevice"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode,Microsoft.Xna.Framework.Graphics.BlendState,Microsoft.Xna.Framework.Graphics.SamplerState,Microsoft.Xna.Framework.Graphics.DepthStencilState,Microsoft.Xna.Framework.Graphics.RasterizerState,Microsoft.Xna.Framework.Graphics.Effect,System.Nullable{Microsoft.Xna.Framework.Matrix})">
+            <summary>
+            Begins a new sprite and text batch with the specified render state.
+            </summary>
+            <param name="sortMode">The drawing order for sprite and text drawing. <see cref="F:Microsoft.Xna.Framework.Graphics.SpriteSortMode.Deferred"/> by default.</param>
+            <param name="blendState">State of the blending. Uses <see cref="P:Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend"/> if null.</param>
+            <param name="samplerState">State of the sampler. Uses <see cref="P:Microsoft.Xna.Framework.Graphics.SamplerState.LinearClamp"/> if null.</param>
+            <param name="depthStencilState">State of the depth-stencil buffer. Uses <see cref="P:Microsoft.Xna.Framework.Graphics.DepthStencilState.None"/> if null.</param>
+            <param name="rasterizerState">State of the rasterization. Uses <see cref="P:Microsoft.Xna.Framework.Graphics.RasterizerState.CullCounterClockwise"/> if null.</param>
+            <param name="effect">A custom <see cref="T:Microsoft.Xna.Framework.Graphics.Effect"/> to override the default sprite effect. Uses default sprite effect if null.</param>
+            <param name="transformMatrix">An optional matrix used to transform the sprite geometry. Uses <see cref="P:Microsoft.Xna.Framework.Matrix.Identity"/> if null.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if <see cref="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode,Microsoft.Xna.Framework.Graphics.BlendState,Microsoft.Xna.Framework.Graphics.SamplerState,Microsoft.Xna.Framework.Graphics.DepthStencilState,Microsoft.Xna.Framework.Graphics.RasterizerState,Microsoft.Xna.Framework.Graphics.Effect,System.Nullable{Microsoft.Xna.Framework.Matrix})"/> is called next time without previous <see cref="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.End"/>.</exception>
+            <remarks>This method uses optional parameters.</remarks>
+            <remarks>The <see cref="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode,Microsoft.Xna.Framework.Graphics.BlendState,Microsoft.Xna.Framework.Graphics.SamplerState,Microsoft.Xna.Framework.Graphics.DepthStencilState,Microsoft.Xna.Framework.Graphics.RasterizerState,Microsoft.Xna.Framework.Graphics.Effect,System.Nullable{Microsoft.Xna.Framework.Matrix})"/> Begin should be called before drawing commands, and you cannot call it again before subsequent <see cref="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.End"/>.</remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.End">
+            <summary>
+            Flushes all batched text and sprites to the screen.
+            </summary>
+            <remarks>This command should be called after <see cref="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode,Microsoft.Xna.Framework.Graphics.BlendState,Microsoft.Xna.Framework.Graphics.SamplerState,Microsoft.Xna.Framework.Graphics.DepthStencilState,Microsoft.Xna.Framework.Graphics.RasterizerState,Microsoft.Xna.Framework.Graphics.Effect,System.Nullable{Microsoft.Xna.Framework.Matrix})"/> and drawing commands.</remarks>
+        </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,System.Nullable{Microsoft.Xna.Framework.Vector2},System.Nullable{Microsoft.Xna.Framework.Rectangle},System.Nullable{Microsoft.Xna.Framework.Rectangle},System.Nullable{Microsoft.Xna.Framework.Vector2},System.Single,System.Nullable{Microsoft.Xna.Framework.Vector2},System.Nullable{Microsoft.Xna.Framework.Color},Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
             <summary>
-            This is a MonoGame Extension method for calling Draw() using named parameters.  It is not available in the standard XNA Framework.
+            Submit a sprite for drawing in the current batch.
             </summary>
-            <param name='texture'>
-            The Texture2D to draw.  Required.
-            </param>
-            <param name='position'>
-            The position to draw at.  If left empty, the method will draw at drawRectangle instead.
-            </param>
-            <param name='drawRectangle'>
-            The rectangle to draw at.  If left empty, the method will draw at position instead.
-            </param>
-            <param name='sourceRectangle'>
-            The source rectangle of the texture.  Default is null
-            </param>
-            <param name='origin'>
-            Origin of the texture.  Default is Vector2.Zero
-            </param>
-            <param name='rotation'>
-            Rotation of the texture.  Default is 0f
-            </param>
-            <param name='scale'>
-            The scale of the texture as a Vector2.  Default is Vector2.One
-            </param>
-            <param name='color'>
-            Color of the texture.  Default is Color.White
-            </param>
-            <param name='effect'>
-            SpriteEffect to draw with.  Default is SpriteEffects.None
-            </param>
-            <param name='depth'>
-            Draw depth.  Default is 0f.
-            </param>
+            <param name="texture">A texture.</param>
+            <param name="position">The drawing location on screen or null if <paramref name="destinationRectangle"> is used.</paramref></param>
+            <param name="destinationRectangle">The drawing bounds on screen or null if <paramref name="position"> is used.</paramref></param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="origin">An optional center of rotation. Uses <see cref="P:Microsoft.Xna.Framework.Vector2.Zero"/> if null.</param>
+            <param name="rotation">An optional rotation of this sprite. 0 by default.</param>
+            <param name="scale">An optional scale vector. Uses <see cref="P:Microsoft.Xna.Framework.Vector2.One"/> if null.</param>
+            <param name="color">An optional color mask. Uses <see cref="P:Microsoft.Xna.Framework.Color.White"/> if null.</param>
+            <param name="effects">The optional drawing modificators. <see cref="F:Microsoft.Xna.Framework.Graphics.SpriteEffects.None"/> by default.</param>
+            <param name="layerDepth">An optional depth of the layer of this sprite. 0 by default.</param>
+            <exception cref="T:System.InvalidOperationException">Throwns if both <paramref name="position"/> and <paramref name="destinationRectangle"/> been used.</exception>
+            <remarks>This overload uses optional parameters. This overload requires only one of <paramref name="position"/> and <paramref name="destinationRectangle"/> been used.</remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this sprite.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this sprite.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this sprite.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this sprite.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this sprite.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this sprite.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="destinationRectangle">The drawing bounds on screen.</param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this sprite.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this sprite.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="destinationRectangle">The drawing bounds on screen.</param>
+            <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Draw(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a sprite for drawing in the current batch.
+            </summary>
+            <param name="texture">A texture.</param>
+            <param name="destinationRectangle">The drawing bounds on screen.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this string.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this string.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this string.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.String,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this string.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this string.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this string.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.Text.StringBuilder,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.Text.StringBuilder,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this string.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this string.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this string.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.DrawString(Microsoft.Xna.Framework.Graphics.SpriteFont,System.Text.StringBuilder,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Submit a text string of sprites for drawing in the current batch.
+            </summary>
+            <param name="spriteFont">A font.</param>
+            <param name="text">The text which will be drawn.</param>
+            <param name="position">The drawing location on screen.</param>
+            <param name="color">A color mask.</param>
+            <param name="rotation">A rotation of this string.</param>
+            <param name="origin">Center of the rotation. 0,0 by default.</param>
+            <param name="scale">A scaling of this string.</param>
+            <param name="effects">Modificators for drawing. Can be combined.</param>
+            <param name="layerDepth">A depth of the layer of this string.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SpriteBatch.Dispose(System.Boolean)">
+            <summary>
+            Immediately releases the unmanaged resources used by this object.
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.SpriteBatcher">
             <summary>
@@ -5246,9 +5469,107 @@
             A hash value which can be used to compare declarations.
             </summary>
         </member>
-        <member name="F:Microsoft.Xna.Framework.Graphics.Viewport.x">
+        <member name="T:Microsoft.Xna.Framework.Graphics.Viewport">
             <summary>
-            Attributes 
+            Describes the view bounds for render-target surface.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/> struct.
+            </summary>
+            <param name="x">The x coordinate of the upper-left corner of the view bounds in pixels.</param>
+            <param name="y">The y coordinate of the upper-left corner of the view bounds in pixels.</param>
+            <param name="width">The width of the view bounds in pixels.</param>
+            <param name="height">The height of the view bounds in pixels.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Single,System.Single)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/> struct.
+            </summary>
+            <param name="x">The x coordinate of the upper-left corner of the view bounds in pixels.</param>
+            <param name="y">The y coordinate of the upper-left corner of the view bounds in pixels.</param>
+            <param name="width">The width of the view bounds in pixels.</param>
+            <param name="height">The height of the view bounds in pixels.</param>
+            <param name="minDepth">The lower limit of depth.</param>
+            <param name="maxDepth">The upper limit of depth.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.#ctor(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/> struct.
+            </summary>
+            <param name="bounds">A <see cref="T:Microsoft.Xna.Framework.Rectangle"/> that defines the location and size of the <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/> in a render target.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.Project(Microsoft.Xna.Framework.Vector3,Microsoft.Xna.Framework.Matrix,Microsoft.Xna.Framework.Matrix,Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Projects a <see cref="T:Microsoft.Xna.Framework.Vector3"/> from world space into screen space.
+            </summary>
+            <param name="source">The <see cref="T:Microsoft.Xna.Framework.Vector3"/> to project.</param>
+            <param name="projection">The projection <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <param name="view">The view <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <param name="world">The world <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.Unproject(Microsoft.Xna.Framework.Vector3,Microsoft.Xna.Framework.Matrix,Microsoft.Xna.Framework.Matrix,Microsoft.Xna.Framework.Matrix)">
+            <summary>
+            Unprojects a <see cref="T:Microsoft.Xna.Framework.Vector3"/> from screen space into world space.
+            </summary>
+            <param name="source">The <see cref="T:Microsoft.Xna.Framework.Vector3"/> to unproject.</param>
+            <param name="projection">The projection <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <param name="view">The view <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <param name="world">The world <see cref="T:Microsoft.Xna.Framework.Matrix"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Viewport.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> representation of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/> in the format:
+            {X:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.X"/>] Y:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Y"/>] Width:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Width"/>] Height:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Height"/>] MinDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MinDepth"/>] MaxDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MaxDepth"/>]}
+            </summary>
+            <returns>A <see cref="T:System.String"/> representation of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/>.</returns>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.Height">
+            <summary>
+            The height of the bounds in pixels.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.MaxDepth">
+            <summary>
+            The upper limit of depth of this viewport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.MinDepth">
+            <summary>
+            The lower limit of depth of this viewport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.Width">
+            <summary>
+            The width of the bounds in pixels.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.Y">
+            <summary>
+            The y coordinate of the beginning of this viewport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.X">
+            <summary>
+            The x coordinate of the beginning of this viewport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.AspectRatio">
+            <summary>
+            Gets the aspect ratio of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/>, which is width / height. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.Bounds">
+            <summary>
+            Gets or sets a boundary of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.Graphics.Viewport.TitleSafeArea">
+            <summary>
+            Returns the subset of the viewport that is guaranteed to be visible on a lower quality display.
             </summary>
         </member>
         <member name="T:Microsoft.Xna.Framework.Input.GamePad">
@@ -7168,6 +7489,9 @@
             Retrieves a Texture2D containing the current frame of video being played.
             </summary>
             <returns>The current frame of video.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if no video is set on the player</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if the platform was unable to get a texture in a reasonable amount of time. Often the platform specific media code is running
+            in a different thread or process. Note: This may be a change from XNA behaviour</exception>
         </member>
         <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Pause">
             <summary>
@@ -7429,7 +7753,7 @@
         </member>
         <member name="M:Microsoft.Xna.Framework.Utilities.ReflectionHelpers.IsConcreteClass(System.Type)">
             <summary>
-            Returns true if the given type represents a class that is not abstract
+            Returns true if the given type represents a non-object type that is not abstract.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.Utilities.ReflectionHelpers.PropertyIsPublic(System.Reflection.PropertyInfo)">

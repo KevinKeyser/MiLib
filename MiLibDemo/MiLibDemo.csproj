@@ -56,12 +56,8 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MiLibDemoContent\MiLibDemoContent\MiLibDemoContent.csproj">
-      <Project>{50c56b49-e225-4074-aad8-0b9d579c5082}</Project>
-      <Name>MiLibDemoContent</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MiLib\MiLib.csproj">
-      <Project>{54c970d7-c10d-487b-8ac3-7c932fd71c28}</Project>
+      <Project>{41e0c8c3-07b4-4b19-b0d7-79e832c04fa5}</Project>
       <Name>MiLib</Name>
     </ProjectReference>
   </ItemGroup>
