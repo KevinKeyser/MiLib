@@ -1,8 +1,6 @@
 MiLib/obj
-MiLibDemo/MiLibDemo/obj
-MiLibDemo/MiLibDemoContent/obj
-MiLibDemo/MiLibDemo/bin
 MiLib/bin
 MiLibDemo/obj/
+MiLibDemo/bin/
 MiLibDemo/Content/obj/
 MiLibDemo/Content/bin/
