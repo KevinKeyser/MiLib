@@ -145,7 +145,7 @@ namespace MiLib.UserInterface
 		#endregion
 
 		public Button (Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor)
-            : this(up, down, hover, disabled, buttonColor, new Rectangle(0,0,0,0)) { }
+            : this(up, down, hover, disabled, buttonColor, new Rectangle(0,0,up.Width,up.Height)) { }
 
         public Button(Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor, Vector2 position, Vector2 size)
             : this(up, down, hover, disabled, buttonColor, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y)) { }
@@ -157,13 +157,15 @@ namespace MiLib.UserInterface
             {
                 Debug.WriteLine("Button - Texture2D up cannot be null");
             }
-            else if ((up.Bounds != down.Bounds && down != null) || (up.Bounds != hover.Bounds && hover != null) || (up.Bounds != disabled.Bounds && disabled != null))
+            else if ((down != null && up.Bounds != down.Bounds) || (hover != null && up.Bounds != hover.Bounds) || (disabled != null && up.Bounds != disabled.Bounds))
             {
                 Debug.WriteLine("Button - Texture2D images must be the same size or null");
             }
             else
             {
-                patch9 = new Patch9Image(Vector4.Zero, up, Vector2.Zero, buttonColor);
+                patch9 = new Patch9Image(Vector4.Zero, up, new Vector2(bounds.X, bounds.Y), buttonColor);
+                patch9.Size = new Vector2(bounds.Width, bounds.Height);
+                Size = new Vector2(bounds.Width, bounds.Height);
                 IsDisabled = false;
                 Up = up;
                 Down = down;
@@ -181,7 +183,7 @@ namespace MiLib.UserInterface
 
 		public override void Update(GameTime gameTime)
 		{
-			if (InputManager.IsDragged(Bounds)) {
+			if (InputManager.IsLeftDragged(Bounds)) {
 				InvokeEvent (Drag, InputManager.MouseDragAmount());
 			}
 			if (IsDisabled) {

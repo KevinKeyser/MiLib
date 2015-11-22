@@ -9,8 +9,21 @@ using System.Text;
 
 namespace MiLib.UserInterface
 {
-    public class UIComponent
+    public class UIComponent : IFocusable
     {
+        private bool isFocused;
+        public bool IsFocused
+        {
+            get
+            {
+                return isFocused;
+            }
+            set
+            {
+                isFocused = value;
+            }
+        }
+
         protected IParent parent;
 
         public virtual IParent Parent
@@ -104,6 +117,11 @@ namespace MiLib.UserInterface
         }
 
         public virtual void Update(GameTime gameTime)
+        {
+
+        }
+
+        public virtual void Render(SpriteBatch spriteBatch)
         {
 
         }

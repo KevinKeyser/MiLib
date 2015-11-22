@@ -10,8 +10,10 @@ namespace MiLib.UserInterface
 {
     public class Image : UIComponent
     {
-        public event EventHandler Clicked;
-        public event EventHandler<UIDraggedEventArgs> Dragged;
+        public event EventHandler LeftClicked;
+        public event EventHandler RightClicked;
+        public event EventHandler<UIDraggedEventArgs> LeftDragged;
+        public event EventHandler<UIDraggedEventArgs> RightDragged;
 
         private Texture2D texture;
         public Texture2D Texture
@@ -188,13 +190,17 @@ namespace MiLib.UserInterface
 
         public override void Update(GameTime gameTime)
         {
-            if(Clicked != null && InputManager.IsLeftClicked() && bounds.Intersects(parent is CameraPanel ? (InputManager.MousePosition + ((CameraPanel)parent).CameraPosition - ((CameraPanel)parent).Position/2) : InputManager.MousePosition))
+            if(LeftClicked != null && InputManager.IsLeftClicked() && bounds.Intersects(parent is CameraPanel ? (InputManager.MousePosition + ((CameraPanel)parent).CameraPosition - ((CameraPanel)parent).Position/2) : InputManager.MousePosition))
             {
-                Clicked.Invoke(this, null);
+                LeftClicked.Invoke(this, null);
             }
-            if(Dragged != null && InputManager.IsDragged())
+            if(LeftDragged != null && InputManager.IsLeftDragged())
             {
-                Dragged.Invoke(this, new UIDraggedEventArgs(InputManager.MouseDragAmount()));
+                LeftDragged.Invoke(this, new UIDraggedEventArgs(InputManager.MouseDragAmount()));
+            }
+            if (RightDragged != null && InputManager.IsRightDragged())
+            {
+                RightDragged.Invoke(this, new UIDraggedEventArgs(InputManager.MouseDragAmount()));
             }
             base.Update(gameTime);
         }

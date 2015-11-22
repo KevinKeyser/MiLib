@@ -108,7 +108,7 @@ namespace MiLib.UserInterface
         #endregion
         public override void Update(GameTime gameTime)
         {
-            if (InputManager.IsDragged(Bounds))
+            if (InputManager.IsLeftDragged(Bounds))
             {
                 InvokeEvent(Drag, InputManager.MouseDragAmount());
             }

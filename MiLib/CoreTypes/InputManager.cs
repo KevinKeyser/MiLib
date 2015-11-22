@@ -26,7 +26,15 @@ namespace MiLib.CoreTypes
 		static Vector2 lastMousePosition;
 
         static int lastMouseScroll;
-        static int mouseScroll; 
+        static int mouseScroll;
+
+        public static Keys[] KeysPressed
+        {
+            get
+            {
+                return keyState.GetPressedKeys();
+            }
+        }
 
 		public static Vector2 MousePosition
 		{
@@ -36,11 +44,11 @@ namespace MiLib.CoreTypes
 			}
 		}
 
-		public static Vector2 LastMoustPosition
+		public static Vector2 LastMousePosition
 		{
 			get 
 			{
-				return LastMoustPosition;
+				return lastMousePosition;
 			}
 		}
 
@@ -121,19 +129,29 @@ namespace MiLib.CoreTypes
 		}
 		#endregion
 		#region Mouse Movement
-		public static bool IsDragged()
+		public static bool IsLeftDragged()
 		{
 			return ((mouseState.LeftButton == ButtonState.Pressed &&  mousePosition - lastMousePosition != Vector2.Zero) ? true : false);
 		}
 
-		public static bool IsDragged(Rectangle bounds)
+		public static bool IsLeftDragged(Rectangle bounds)
 		{
 			return ((mouseState.LeftButton == ButtonState.Pressed &&  mousePosition - lastMousePosition != Vector2.Zero && bounds.Contains (new Point((int)mousePosition.X, (int)mousePosition.Y))) ? true : false);
 		}
 
+        public static bool IsRightDragged()
+        {
+            return ((mouseState.RightButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero) ? true : false);
+        }
+
+        public static bool IsRightDragged(Rectangle bounds)
+        {
+            return ((mouseState.RightButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y))) ? true : false);
+        }
+
 		public static Vector2 MouseDragAmount()
 		{
-			return ((mouseState.LeftButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero) ?  mousePosition - lastMousePosition : Vector2.Zero); 
+			return (((mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Released) && mousePosition - lastMousePosition != Vector2.Zero) ?  mousePosition - lastMousePosition : Vector2.Zero); 
 		}
 
 		public static bool isMouseHovering(Rectangle bounds)
@@ -203,6 +221,11 @@ namespace MiLib.CoreTypes
 		{
 			return lastMouseState.RightButton == ButtonState.Released && bounds.Contains (new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
+
+        public static bool IsRightUp()
+        {
+            return lastMouseState.RightButton == ButtonState.Released;
+        }
 		#endregion
 		#region Middle
 		public static bool IsMiddleDown(Rectangle bounds)

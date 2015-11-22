@@ -66,10 +66,11 @@ namespace MiLib.UserInterface
                     label.IsSelected = false;
                     label.CenterText();
                 }
+                base.Update(gameTime);
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             if (IsVisible)
             {
@@ -78,6 +79,7 @@ namespace MiLib.UserInterface
                 {
                     label.Draw(spriteBatch);
                 }
+                base.Draw(spriteBatch);
             }
         }
 

@@ -40,32 +40,49 @@ namespace MiLib.UserInterface
 					textureRegion [7] = new Rectangle ((int)Patches.X, SplitImage.Height - (int)Patches.W, SplitImage.Width - (int)(Patches.X + Patches.Y), (int)Patches.W);
 					textureRegion [8] = new Rectangle (SplitImage.Width - (int)Patches.Y, SplitImage.Height - (int)Patches.W, (int)Patches.Y, (int)Patches.W);
 
-					Size = size;
+					Scale = scale;
 				}
 			}
 		}
 
-		private Vector2 size = Vector2.Zero;
-		public Vector2 Size
+        private Vector2 size;
+
+        public Vector2 Size
+        {
+            get
+            {
+                return size;
+            }
+            set
+            {
+                size = value;
+                Scale = value / new Vector2(SplitImage.Width, SplitImage.Height);
+            }
+        }
+
+		private Vector2 scale = Vector2.Zero;
+		public Vector2 Scale
 		{ 
 			get
 			{
-				return new Vector2(size.X + SplitImage.Width, size.Y + SplitImage.Height); 
+				return new Vector2(scale.X * SplitImage.Width, scale.Y * SplitImage.Height); 
 			}
-			set {
-				size = value;
+			set
+            {
+                scale = value;
+                size = new Vector2(SplitImage.Width, SplitImage.Height) * scale;
 
 				drawArea [0] = new Rectangle ((int)(textureRegion [0].X + position.X), (int)(textureRegion [0].Y + position.Y), (int)(textureRegion [0].Width), 			(int)(textureRegion [0].Height));
-				drawArea [1] = new Rectangle ((int)(textureRegion [1].X + position.X), (int)(textureRegion [1].Y + position.Y), (int)(textureRegion [1].Width + size.X), 	(int)(textureRegion [1].Height));
-				drawArea [2] = new Rectangle ((int)(textureRegion [2].X + position.X + size.X), (int)(textureRegion [2].Y + position.Y), (int)(textureRegion [2].Width), 			(int)(textureRegion [2].Height));
+				drawArea [1] = new Rectangle ((int)(textureRegion [1].X + position.X), (int)(textureRegion [1].Y + position.Y), (int)(textureRegion [1].Width * scale.X), 	(int)(textureRegion [1].Height));
+				drawArea [2] = new Rectangle ((int)(textureRegion [2].X * scale.X + position.X ), (int)(textureRegion [2].Y + position.Y), (int)(textureRegion [2].Width), 			(int)(textureRegion [2].Height));
 
-				drawArea [3] = new Rectangle ((int)(textureRegion [3].X + position.X), (int)(textureRegion [3].Y + position.Y), (int)(textureRegion [3].Width), 			(int)(textureRegion [3].Height + size.Y));
-				drawArea [4] = new Rectangle ((int)(textureRegion [4].X + position.X), (int)(textureRegion [4].Y + position.Y), (int)(textureRegion [4].Width + size.X), 	(int)(textureRegion [4].Height + size.Y));
-				drawArea [5] = new Rectangle ((int)(textureRegion [5].X + position.X + size.X), (int)(textureRegion [5].Y + position.Y), (int)(textureRegion [5].Width), 			(int)(textureRegion [5].Height + size.Y));
+				drawArea [3] = new Rectangle ((int)(textureRegion [3].X + position.X), (int)(textureRegion [3].Y + position.Y), (int)(textureRegion [3].Width), 			(int)(textureRegion [3].Height * scale.Y));
+				drawArea [4] = new Rectangle ((int)(textureRegion [4].X + position.X), (int)(textureRegion [4].Y + position.Y), (int)(textureRegion [4].Width * scale.X), 	(int)(textureRegion [4].Height * scale.Y));
+				drawArea [5] = new Rectangle ((int)(textureRegion [5].X * scale.X + position.X), (int)(textureRegion [5].Y + position.Y), (int)(textureRegion [5].Width), 			(int)(textureRegion [5].Height * scale.Y));
 
-				drawArea [6] = new Rectangle ((int)(textureRegion [6].X + position.X), (int)(textureRegion [6].Y + position.Y + size.Y), (int)(textureRegion [6].Width),				(int)(textureRegion [6].Height));
-				drawArea [7] = new Rectangle ((int)(textureRegion [7].X + position.X), (int)(textureRegion [7].Y + position.Y + size.Y), (int)(textureRegion [7].Width + size.X), 	(int)(textureRegion [7].Height));
-				drawArea [8] = new Rectangle ((int)(textureRegion [8].X + position.X + size.X), (int)(textureRegion [8].Y + position.Y + size.Y), (int)(textureRegion [8].Width), 			(int)(textureRegion [8].Height));
+				drawArea [6] = new Rectangle ((int)(textureRegion [6].X + position.X), (int)(textureRegion [6].Y * scale.Y + position.Y), (int)(textureRegion [6].Width),				(int)(textureRegion [6].Height));
+				drawArea [7] = new Rectangle ((int)(textureRegion [7].X + position.X), (int)(textureRegion [7].Y * scale.Y + position.Y), (int)(textureRegion [7].Width * scale.X), 	(int)(textureRegion [7].Height));
+				drawArea [8] = new Rectangle ((int)(textureRegion [8].X * scale.X + position.X), (int)(textureRegion [8].Y * scale.Y + position.Y), (int)(textureRegion [8].Width), 			(int)(textureRegion [8].Height));
 			}
 		}
 
@@ -79,15 +96,15 @@ namespace MiLib.UserInterface
 			set 
 			{
 				position = value;
-				Size = size;
+				Scale = scale;
 			}
 		}
 
 		public Patch9Image (Vector4 patches, Texture2D splitImage, Vector2 position, Color color)
-		{
-			SplitColor = color;
+        {
+            SplitImage = splitImage;
+            SplitColor = color;
 			Position = position;
-			SplitImage = splitImage;
 			Patches = patches;
 		}
 

@@ -5,7 +5,8 @@ using System.Text;
 
 namespace MiLib.Interfaces
 {
-    public interface IParent : IPosition
+    public interface IFocusable
     {
+        bool IsFocused { get; set; }
     }
 }
