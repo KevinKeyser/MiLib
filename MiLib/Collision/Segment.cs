@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using MiLib.CoreTypes;
 
 namespace MiLib.Collision
@@ -102,9 +97,9 @@ namespace MiLib.Collision
             }
         }
 
-        private Rotation rotation;
+        private float rotation;
 
-        public Rotation Rotation
+        public float Rotation
         {
             get
             {
@@ -112,11 +107,11 @@ namespace MiLib.Collision
             }
             set
             {
-                Rotation rot = rotation;
+                float rot = rotation;
                 rotation = value;
-                angleOA += (value - rot).AsRadians();
-                angleOB += (value - rot).AsRadians();
-                angleAB += (value - rot).AsRadians();
+                angleOA += (value - rot);
+                angleOB += (value - rot);
+                angleAB += (value - rot);
 
                 Vector2 angleVector = Util.AngleToVector(angleOA + MathHelper.PiOver2);
                 angleVector.Normalize();

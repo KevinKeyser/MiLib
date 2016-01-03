@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
-
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Media;
-
 using MiLib.CoreTypes;
 
 namespace MiLib.UserInterface
@@ -145,7 +136,7 @@ namespace MiLib.UserInterface
 		#endregion
 
 		public Button (Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor)
-            : this(up, down, hover, disabled, buttonColor, new Rectangle(0,0,up.Width,up.Height)) { }
+            : this(up, down, hover, disabled, buttonColor, new Rectangle(0,0,0,0)) { }
 
         public Button(Texture2D up, Texture2D down, Texture2D hover, Texture2D disabled, Color buttonColor, Vector2 position, Vector2 size)
             : this(up, down, hover, disabled, buttonColor, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y)) { }
@@ -157,15 +148,13 @@ namespace MiLib.UserInterface
             {
                 Debug.WriteLine("Button - Texture2D up cannot be null");
             }
-            else if ((down != null && up.Bounds != down.Bounds) || (hover != null && up.Bounds != hover.Bounds) || (disabled != null && up.Bounds != disabled.Bounds))
+            else if ((up.Bounds != down.Bounds && down != null) || (up.Bounds != hover.Bounds && hover != null) || (up.Bounds != disabled.Bounds && disabled != null))
             {
                 Debug.WriteLine("Button - Texture2D images must be the same size or null");
             }
             else
             {
-                patch9 = new Patch9Image(Vector4.Zero, up, new Vector2(bounds.X, bounds.Y), buttonColor);
-                patch9.Size = new Vector2(bounds.Width, bounds.Height);
-                Size = new Vector2(bounds.Width, bounds.Height);
+                patch9 = new Patch9Image(Vector4.Zero, up, Vector2.Zero, buttonColor);
                 IsDisabled = false;
                 Up = up;
                 Down = down;

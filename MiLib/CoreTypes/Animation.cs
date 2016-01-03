@@ -1,23 +1,26 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using System.Linq;
-using System.Text;
 
 namespace MiLib.CoreTypes
 {
     public enum AnimationType
     {
         Normal,
-        Reverse,
         PingPong
     }
 
     public class Animation
     {
-        public AnimationType AnimationType { get; set; }
+        private AnimationType animationType;
+
+        public AnimationType AnimationType { get { return animationType; } set { animationType = value; if (animationType == AnimationType.PingPong) pingpongDirection = IsReverse ? -1 : 1; } }
         public bool IsLooping { get; set; }
+
+        private int pingpongDirection = 1;
         private bool isReverse;
+        public bool IsReverse { get { return isReverse; } set { isReverse = value; startindex = value ? frames.Length - 1 : 0; if (animationType == AnimationType.PingPong) pingpongDirection = IsReverse ? -1 : 1; } }
         private TimeSpan elapsedTime;
         public TimeSpan AnimationSpeed { get; set; }
         public Frame Frame
@@ -27,107 +30,102 @@ namespace MiLib.CoreTypes
                 return frames[CurrentFrame];
             }
         }
-
-        public Rectangle SourceRectangle
-        {
-            get
-            {
-                return frames[CurrentFrame].SourceRectangle;
-            }
-        }
-
-        public Vector2 Origin
-        {
-            get
-            {
-                return frames[CurrentFrame].Origin;
-            }
-        }
+        private bool stop;
 
         public int CurrentFrame { get; protected set; }
         private Frame[] frames;
+        private int startindex;
 
-        public Animation(Frame[] frames)
-            : this(AnimationType.Normal, true, TimeSpan.FromMilliseconds(250), frames)
+        public Animation(IEnumerable<Frame> frames)
+            : this(AnimationType.Normal, false, true, TimeSpan.FromMilliseconds(250), frames)
         { }
 
-        public Animation(List<Frame> frames)
-            : this(AnimationType.Normal, true, TimeSpan.FromMilliseconds(250), frames.ToArray())
-        { }
-
-        public Animation(AnimationType animationType, bool isLooping, TimeSpan animationSpeed, List<Frame> frames)
-            : this(animationType, isLooping, animationSpeed, frames.ToArray())
-        { }
-        public Animation(AnimationType animationType, bool isLooping, TimeSpan animationSpeed, Frame[] frames)
+        public Animation(AnimationType animationType, bool isReverse, bool isLooping, TimeSpan animationSpeed, IEnumerable<Frame> frames)
         {
             AnimationType = animationType;
             IsLooping = isLooping;
             AnimationSpeed = animationSpeed;
-            this.frames = frames;
-            CurrentFrame = 0;
+            this.frames = frames.ToArray();
             elapsedTime = new TimeSpan();
-            switch (AnimationType)
-            {
-                case AnimationType.Normal:
-                case AnimationType.PingPong:
-                    isReverse = false;
-                    break;
-                case AnimationType.Reverse:
-                    isReverse = true;
-                    break;
-            }
+            IsReverse = isReverse;
+            CurrentFrame = startindex;
+            stop = false;
         }
 
         public void Reset()
         {
             elapsedTime = new TimeSpan();
+            CurrentFrame = startindex;
+            stop = false;
         }
 
         public void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime;
-            if (elapsedTime >= AnimationSpeed)
+            if (!stop)
             {
-                elapsedTime = TimeSpan.FromMilliseconds(0);
-                switch (AnimationType)
+                elapsedTime += gameTime.ElapsedGameTime;
+                if (elapsedTime >= AnimationSpeed)
                 {
-                    case AnimationType.Normal:
-                        CurrentFrame++;
-                        if (CurrentFrame >= frames.Length)
-                        {
-                            CurrentFrame = IsLooping ? 0 : frames.Length - 1;
-                        }
-                        break;
-                    case AnimationType.PingPong:
-                        if (isReverse)
-                        {
-                            CurrentFrame--;
+                    elapsedTime = TimeSpan.Zero;
+                    switch (AnimationType)
+                    {
+                        case AnimationType.Normal:
+                            if (IsReverse)
+                            {
+                                CurrentFrame--;
+                                if (CurrentFrame < 0)
+                                {
+                                    if (IsLooping)
+                                    {
+                                        CurrentFrame = frames.Length - 1;
+                                    }
+                                    else
+                                    {
+                                        CurrentFrame = 0;
+                                        stop = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CurrentFrame++;
+                                if (CurrentFrame > frames.Length - 1)
+                                {
+                                    if(IsLooping)
+                                    {
+                                        CurrentFrame = 0;
+                                    }
+                                    else
+                                    {
+                                        CurrentFrame = frames.Length - 1;
+                                        stop = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case AnimationType.PingPong:
+                            CurrentFrame += pingpongDirection;
                             if (CurrentFrame <= 0)
                             {
                                 CurrentFrame = 0;
-                                if (IsLooping)
+                                pingpongDirection *= -1;
+                                if(!IsReverse && !IsLooping)
                                 {
-                                    isReverse = !isReverse;
+                                    stop = true;
                                 }
                             }
-                        }
-                        else
-                        {
-                            CurrentFrame++;
                             if (CurrentFrame >= frames.Length - 1)
                             {
                                 CurrentFrame = frames.Length - 1;
-                                isReverse = !isReverse;
+                                pingpongDirection *= -1;
+                                if(IsReverse && !IsLooping)
+                                {
+                                    stop = true;
+                                }
                             }
-                        }
-                        break;
-                    case AnimationType.Reverse:
-                        CurrentFrame--;
-                        if (CurrentFrame <= 0)
-                        {
-                            CurrentFrame = IsLooping ? frames.Length - 1 : 0;
-                        }
-                        break;
+
+                            break;
+                    }
                 }
             }
         }

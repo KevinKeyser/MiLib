@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MiLib.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MiLib.Interfaces;
 
 namespace MiLib.UserInterface
 {
@@ -109,7 +108,7 @@ namespace MiLib.UserInterface
             base.Update(gameTime);
         }
 
-        public void Render(SpriteBatch spriteBatch)
+        public override void Render(SpriteBatch spriteBatch)
         {
             foreach (Panel panel in components.OfType<Panel>())
             {

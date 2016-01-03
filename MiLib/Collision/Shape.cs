@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using MiLib.CoreTypes;
 
 namespace MiLib.Collision
@@ -40,11 +35,11 @@ namespace MiLib.Collision
             }
         }
 
-        protected Rotation rotation;
+        protected float rotation;
 
 
         //Broken Negative Scale
-        public virtual Rotation Rotation
+        public virtual float Rotation
         {
             get { return rotation; }
             set
@@ -210,7 +205,7 @@ namespace MiLib.Collision
                 boundsSegments[i] = new Segment(Vector2.Zero, Vector2.Zero, Vector2.Zero, graphicsDevice);
             }
             Origin = Vector2.Zero;
-            rotation = new CoreTypes.Rotation(0);
+            rotation = 0;
             bounds = new RectangleAABB();
             Debug = false;
 

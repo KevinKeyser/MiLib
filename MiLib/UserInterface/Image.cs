@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiLib.CoreTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MiLib.UserInterface
 {
@@ -25,14 +22,14 @@ namespace MiLib.UserInterface
             set
             {
                 texture = value;
-                if(texture != null)
+                if (texture != null)
                 {
                     Scale = scale;
                 }
             }
         }
 
-        public Rotation Rotation
+        public float Rotation
         {
             get;
             set;
@@ -58,7 +55,7 @@ namespace MiLib.UserInterface
             set;
         }
 
-        public SpriteEffects Effects
+        public SpriteEffects SpriteEffect
         {
             get;
             set;
@@ -75,24 +72,15 @@ namespace MiLib.UserInterface
         public Vector2 Scale
         {
             get { return scale; }
-            set 
-            { 
+            set
+            {
                 scale = value;
 
                 if (texture != null)
                 {
-                    if (sourceRectangle.HasValue)
-                    {
-                        size = new Vector2(sourceRectangle.Value.Width, sourceRectangle.Value.Height) * scale;
-                        bounds.Width = (int)(sourceRectangle.Value.Width * scale.X);
-                        bounds.Height = (int)(sourceRectangle.Value.Height * scale.Y);
-                    }
-                    else
-                    {
-                        size = new Vector2(Texture.Width, Texture.Height) * scale;
-                        bounds.Width = (int)(texture.Width * scale.X);
-                        bounds.Height = (int)(texture.Height * scale.Y);
-                    }
+                    size = new Vector2(sourceRectangle.Width, sourceRectangle.Height) * scale;
+                    bounds.Width = (int)(sourceRectangle.Width * scale.X);
+                    bounds.Height = (int)(sourceRectangle.Height * scale.Y);
                     /*if (parent is CameraPanel)
                     {
                         bounds.Width = (int)(bounds.Width * ((CameraPanel)parent).Zoom);
@@ -111,18 +99,9 @@ namespace MiLib.UserInterface
                 base.Size = value;
                 if (texture != null)
                 {
-                    if (sourceRectangle.HasValue)
-                    {
-                        scale = size / new Vector2(sourceRectangle.Value.Width, sourceRectangle.Value.Height);
-                        bounds.Width = (int)(sourceRectangle.Value.Width * scale.X);
-                        bounds.Height = (int)(sourceRectangle.Value.Height * scale.Y);
-                    }
-                    else
-                    {
-                        scale = size / new Vector2(Texture.Width, Texture.Height);
-                        bounds.Width = (int)(texture.Width * scale.X);
-                        bounds.Height = (int)(texture.Height * scale.Y);
-                    }
+                    scale = size / new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+                    bounds.Width = (int)(sourceRectangle.Width * scale.X);
+                    bounds.Height = (int)(sourceRectangle.Height * scale.Y);
                     /*if(parent is CameraPanel)
                     {
                         bounds.Width = (int)(bounds.Width * ((CameraPanel)parent).Zoom);
@@ -142,8 +121,8 @@ namespace MiLib.UserInterface
             set
             {
                 position = value;
-                bounds.X = (int)(position.X - origin.X*scale.X);
-                bounds.Y = (int)(position.Y - origin.Y*scale.Y);
+                bounds.X = (int)(position.X - origin.X * scale.X);
+                bounds.Y = (int)(position.Y - origin.Y * scale.Y);
                 /*if(parent != null)
                 {
                     bounds.X += (int)parent.X;
@@ -164,37 +143,38 @@ namespace MiLib.UserInterface
                 Position = position;
             }
         }
-        private Rectangle? sourceRectangle;
+        private Rectangle sourceRectangle;
 
-        public Rectangle? SourceRectangle
+        public Rectangle SourceRectangle
         {
             get { return sourceRectangle; }
             set { sourceRectangle = value; }
         }
 
         public Image(Texture2D texture, Vector2 position)
-            : this(texture, position, null, Color.White, Vector2.One) { }
+            : this(texture, position, new Rectangle(0, 0, texture.Width, texture.Height), Color.White, Vector2.One)
+        { }
 
-        public Image(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, Vector2 scale)
+        public Image(Texture2D texture, Vector2 position, Rectangle sourceRectangle, Color color, Vector2 scale)
             : base(position, texture == null ? Vector2.Zero : new Vector2(texture.Width, texture.Height))
         {
             Texture = texture;
             Color = Color.White;
             this.sourceRectangle = sourceRectangle;
             Scale = scale;
-            Rotation = new Rotation(0);
-            Effects = SpriteEffects.None;
+            Rotation = 0;
+            SpriteEffect = SpriteEffects.None;
             LayerDepth = 0;
             Origin = Vector2.Zero;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if(LeftClicked != null && InputManager.IsLeftClicked() && bounds.Intersects(parent is CameraPanel ? (InputManager.MousePosition + ((CameraPanel)parent).CameraPosition - ((CameraPanel)parent).Position/2) : InputManager.MousePosition))
+            if (LeftClicked != null && InputManager.IsLeftClicked() && bounds.Contains(InputManager.MousePosition))
             {
                 LeftClicked.Invoke(this, null);
             }
-            if(LeftDragged != null && InputManager.IsLeftDragged())
+            if (LeftDragged != null && InputManager.IsLeftDragged())
             {
                 LeftDragged.Invoke(this, new UIDraggedEventArgs(InputManager.MouseDragAmount()));
             }
@@ -209,7 +189,7 @@ namespace MiLib.UserInterface
         {
             if (Texture != null)
             {
-                spriteBatch.Draw(Texture, position, sourceRectangle, Color, Rotation.AsRadians(), origin, scale, Effects, LayerDepth);
+                spriteBatch.Draw(Texture, position, sourceRectangle, Color, Rotation, origin, scale, SpriteEffect, LayerDepth);
             }
             base.Draw(spriteBatch);
         }

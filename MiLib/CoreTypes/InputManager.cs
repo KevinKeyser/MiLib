@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Media;
 
 namespace MiLib.CoreTypes
 {
@@ -17,6 +8,8 @@ namespace MiLib.CoreTypes
 		static MouseState mouseState;
 		static KeyboardState keyState;
 		static GamePadState[] gamePadState = new GamePadState[4];
+
+        
 
 		static MouseState lastMouseState;
 		static KeyboardState lastKeyState;
@@ -36,7 +29,7 @@ namespace MiLib.CoreTypes
             }
         }
 
-		public static Vector2 MousePosition
+        public static Vector2 MousePosition
 		{
 			get
 			{
@@ -44,11 +37,11 @@ namespace MiLib.CoreTypes
 			}
 		}
 
-		public static Vector2 LastMousePosition
+		public static Vector2 LastMoustPosition
 		{
 			get 
 			{
-				return lastMousePosition;
+				return LastMoustPosition;
 			}
 		}
 
@@ -127,17 +120,17 @@ namespace MiLib.CoreTypes
 		{
 			return !keyState.IsKeyDown (key);
 		}
-		#endregion
-		#region Mouse Movement
-		public static bool IsLeftDragged()
-		{
-			return ((mouseState.LeftButton == ButtonState.Pressed &&  mousePosition - lastMousePosition != Vector2.Zero) ? true : false);
-		}
+        #endregion
+        #region Mouse Movement
+        public static bool IsLeftDragged()
+        {
+            return ((mouseState.LeftButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero) ? true : false);
+        }
 
-		public static bool IsLeftDragged(Rectangle bounds)
-		{
-			return ((mouseState.LeftButton == ButtonState.Pressed &&  mousePosition - lastMousePosition != Vector2.Zero && bounds.Contains (new Point((int)mousePosition.X, (int)mousePosition.Y))) ? true : false);
-		}
+        public static bool IsLeftDragged(Rectangle bounds)
+        {
+            return ((mouseState.LeftButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y))) ? true : false);
+        }
 
         public static bool IsRightDragged()
         {
@@ -149,19 +142,19 @@ namespace MiLib.CoreTypes
             return ((mouseState.RightButton == ButtonState.Pressed && mousePosition - lastMousePosition != Vector2.Zero && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y))) ? true : false);
         }
 
-		public static Vector2 MouseDragAmount()
-		{
-			return (((mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Released) && mousePosition - lastMousePosition != Vector2.Zero) ?  mousePosition - lastMousePosition : Vector2.Zero); 
-		}
+        public static Vector2 MouseDragAmount()
+        {
+            return (((mouseState.LeftButton == ButtonState.Pressed || mouseState.RightButton == ButtonState.Released) && mousePosition - lastMousePosition != Vector2.Zero) ? mousePosition - lastMousePosition : Vector2.Zero);
+        }
 
-		public static bool isMouseHovering(Rectangle bounds)
-		{
+        public static bool isMouseHovering(Rectangle bounds)
+        {
             return bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y));
-		}
-		#endregion
-		#region Mouse Button
-		#region Left
-		public static bool IsLeftDown(Rectangle bounds)
+        }
+        #endregion
+        #region Mouse Button
+        #region Left
+        public static bool IsLeftDown(Rectangle bounds)
 		{
             return mouseState.LeftButton == ButtonState.Pressed && bounds.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}
@@ -226,9 +219,9 @@ namespace MiLib.CoreTypes
         {
             return lastMouseState.RightButton == ButtonState.Released;
         }
-		#endregion
-		#region Middle
-		public static bool IsMiddleDown(Rectangle bounds)
+        #endregion
+        #region Middle
+        public static bool IsMiddleDown(Rectangle bounds)
 		{
 			return mouseState.MiddleButton == ButtonState.Pressed && bounds.Contains (new Point((int)mousePosition.X, (int)mousePosition.Y)); 
 		}

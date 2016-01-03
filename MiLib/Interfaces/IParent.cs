@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
 
 namespace MiLib.Interfaces
 {
-    public interface IParent : IPosition
+    public interface IParent
     {
+        Rectangle Bounds { get; set; }
     }
 }

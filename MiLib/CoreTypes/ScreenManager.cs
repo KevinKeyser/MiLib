@@ -1,25 +1,30 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MiLib.CoreTypes
 {
     public static class ScreenManager
     {
-        static Dictionary<string, Screen> screens = new Dictionary<string, Screen>();
+        static OrthographicCamera camera = new OrthographicCamera(new Vector2(WindowManager.ScreenWidth, WindowManager.ScreenHeight));
 
-        static Screen currentScreen;
-        public static Screen CurrentScreen
+        static Dictionary<String, Screen> screens = new Dictionary<string, Screen>();
+        public static bool IsDebug = false;
+
+        private static String currentScreen;
+        public static String CurrentScreen
         {
-            get
+            get { return currentScreen; }
+            set
             {
-                return currentScreen;
+                currentScreen = value;
+                if (!screens.ContainsKey(value))
+                    throw new KeyNotFoundException("\"" + value + "\" was not found in screens dictionary");
             }
         }
-        public static bool AddScreen(string name, Screen screen)
+
+        public static bool AddScreen(String name, Screen screen)
         {
             if (screens.ContainsKey(name))
             {
@@ -28,7 +33,13 @@ namespace MiLib.CoreTypes
             screens.Add(name, screen);
             return true;
         }
-        public static bool RemoveScreen(string name)
+
+        public static Screen GetScreen(String name)
+        {
+            return screens[name];
+        }
+
+        public static bool RemoveScreen(String name)
         {
             if (screens.ContainsKey(name))
             {
@@ -38,48 +49,21 @@ namespace MiLib.CoreTypes
             }
             return false;
         }
-
-        public static bool SetScreen(string name)
-        {
-            if(screens.ContainsKey(name))
-            {
-                currentScreen = screens[name];
-                return true;
-            }
-            return false;
-        }
-
-        public static void UnloadContent()
-        {
-            string[] names = screens.Keys.ToArray();
-            for (int i = 0; i < names.Length; i++)
-            {
-                screens[names[i]].UnloadContent();
-                screens.Remove(names[i]);
-            }
-        }
-
+        
         public static void Update(GameTime gameTime)
         {
-            if(currentScreen != null)
+            if (currentScreen != null && screens[currentScreen].IsUpdating)
             {
-                currentScreen.Update(gameTime);
-            }
-        }
-
-        public static void Render(SpriteBatch spriteBatch)
-        {
-            if (currentScreen != null)
-            {
-                currentScreen.Render(spriteBatch);
+                screens[currentScreen].Update(gameTime);
             }
         }
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            if(currentScreen != null)
+            if (currentScreen != null && screens[currentScreen].IsVisible)
             {
-                currentScreen.Draw(spriteBatch);
+                screens[currentScreen].Render();
+                screens[currentScreen].Draw(camera);
             }
         }
     }

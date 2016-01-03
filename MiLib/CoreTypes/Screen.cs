@@ -1,93 +1,89 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MiLib.Interfaces;
 using MiLib.UserInterface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MiLib.CoreTypes
 {
-    public abstract class Screen
+    public class Screen : Sprite
     {
-        protected Color backcolor = Color.CornflowerBlue;
+        protected Color backColor = Color.CornflowerBlue;
 
         public Color BackColor
         {
             get
             {
-                return backcolor;
+                return backColor;
             }
             set
             {
-                backcolor = value;
+                backColor = value;
             }
         }
 
+        public ICamera Camera;
 
-        protected List<ISprite> sprites = new List<ISprite>();
-        protected List<UIComponent> uiComponents = new List<UIComponent>();
+        public UIComponent UIFocused { get; protected set; }
 
-        public bool UIFocused { get; protected set; }
+        protected Dictionary<string, UIComponent> uiComponents;
+        protected Dictionary<string, Sprite> sprites;
 
-        public virtual List<ISprite> Sprites
+        public Screen(String name)
+            : base(name)
         {
-            get
-            {
-                return sprites;
-            }
-            set
-            {
-                sprites = value;
-            }
+            uiComponents = new Dictionary<string, UIComponent>();
+            sprites = new Dictionary<string, Sprite>();
+            BackColor = Color.CornflowerBlue;
         }
 
-        public virtual List<UIComponent> UIComponents
+        public override void Update(GameTime gameTime)
         {
-            get
-            {
-                return uiComponents;
-            }
-            set
-            {
-                uiComponents = value;
-            }
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-            foreach(ISprite sprite in sprites)
+            foreach (Sprite sprite in sprites.Values)
             {
                 sprite.Update(gameTime);
             }
-            foreach (UIComponent uicomponent in uiComponents)
+
+            foreach (UIComponent uiComponent in uiComponents.Values)
             {
-                uicomponent.Update(gameTime);
-                if(uiComponents is IFocusable && ((IFocusable)uiComponents).IsFocused)
+                if (uiComponent.IsEnabled)
                 {
-                    UIFocused = true;
+                    uiComponent.Update(gameTime);
+                    if (uiComponents is IFocusable && ((IFocusable)uiComponents).IsFocused)
+                    {
+                        UIFocused = uiComponent;
+                    }
                 }
             }
         }
 
-        public virtual void Render(SpriteBatch spriteBatch)
+        public override void Render()
         {
-            foreach (UIComponent uicomponent in uiComponents)
+            foreach (UIComponent uiComponent in uiComponents.Values)
             {
-                uicomponent.Render(spriteBatch);
+                if (IsVisible)
+                {
+                    uiComponent.Render(WindowManager.SpriteBatch);
+                }
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public override void Draw(ICamera camera)
         {
-            foreach(ISprite sprite in sprites)
-            {
-                sprite.Draw(spriteBatch);
+            foreach (Sprite sprite in sprites.Values)
+            {/*
+                if (sprite.IsVisible)
+                {*/
+                sprite.Draw(Camera);
+                // }
             }
-            foreach (UIComponent uicomponent in uiComponents)
+            foreach (UIComponent component in uiComponents.Values)
             {
-                uicomponent.Draw(spriteBatch);
+                if (component.IsVisible)
+                {
+                    component.Draw(WindowManager.SpriteBatch);
+                }
             }
         }
 

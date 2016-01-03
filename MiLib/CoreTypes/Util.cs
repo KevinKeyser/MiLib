@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MiLib.CoreTypes
 {
@@ -12,16 +11,29 @@ namespace MiLib.CoreTypes
         ClockWise,
         CounterClockWise
     }
+
     public static class Util
     {
-         public static float VectorToAngle(Vector2 vector, float initialOffsetAngle = 0.0f)
+        public static Vector2 ToVector2(this Vector3 vector3)
+        {
+            return new Vector2(vector3.X, vector3.Y);
+        }
+
+        public static Vector3 ToVector3(this Vector2 vector2, float z = 0)
+        {
+            return new Vector3(vector2.X, vector2.Y, z);
+        }
+
+        public static float VectorToAngle(Vector2 vector, float initialOffsetAngle = 0.0f)
         {
             return (float)Math.Atan2(vector.X, -vector.Y) + initialOffsetAngle;
         }
+
         public static Vector2 AngleToVector(float angle)
         {
             return new Vector2((float)Math.Sin(angle), -(float)Math.Cos(angle));
         }
+
         public static Order TriangleOrientation(Vector2 point1, Vector2 point2, Vector2 point3)
         {
             float val = (point2.Y - point1.Y) * (point3.X - point2.X) - (point2.X - point1.X) * (point3.Y - point2.Y);
@@ -97,7 +109,7 @@ namespace MiLib.CoreTypes
             return furthest;
         }
 
-        public static bool Intersects(this Rectangle rect, Vector2 point)
+        public static bool Contains(this Rectangle rect, Vector2 point)
         {
             if (point.X >= rect.X && point.X <= rect.X + rect.Width &&
                 point.Y >= rect.Y && point.Y <= rect.Y + rect.Height)
@@ -114,7 +126,7 @@ namespace MiLib.CoreTypes
         public static float NextRadian(this Random random, float min, float max)
         {
             if (min >= max) { throw new ArgumentOutOfRangeException("min cannot be greater than max"); }
-            return (float)((random.NextDouble() * (max - min) + min) % Math.PI);
+            return (float)((random.NextDouble() * (max - min) + min) % (Math.PI * 2));
         }
 
         public static Vector2 NextVector2(this Random random, Vector2 min, Vector2 max)
@@ -124,11 +136,6 @@ namespace MiLib.CoreTypes
             return new Vector2(random.NextFloat() * (max.X - min.X) + min.X, random.NextFloat() * (max.Y - min.Y) + min.Y);
         }
 
-        public static Vector2 Normalize(Vector2 vector2)
-        {
-            vector2.Normalize();
-            return vector2;
-        }
         /// <summary>
         /// Returns a random boolean
         /// </summary>
@@ -148,6 +155,7 @@ namespace MiLib.CoreTypes
         {
             return (float)random.NextDouble();
         }
+
         public static float NextFloat(this Random random, float min, float max)
         {
             if (min >= max)
@@ -166,5 +174,32 @@ namespace MiLib.CoreTypes
 
             return TimeSpan.FromMilliseconds(random.NextDouble() * (max - min).TotalMilliseconds + min.TotalMilliseconds);
         }
+
+        public static Vector2 Normalize(Vector2 vector2)
+        {
+            Vector2 normal = new Vector2(vector2.X, vector2.Y);
+            normal.Normalize();
+            return normal;
+        }
+
+        private static Dictionary<int, Vector2[]> circlePositions = new Dictionary<int, Vector2[]>();
+
+        public static Vector2[] GetCirclePositions(int circumferencePoints)
+        {
+            Vector2[] points;
+            if(!circlePositions.ContainsKey(circumferencePoints))
+            {
+                points = new Vector2[circumferencePoints];
+                float rotAdd = (float)Math.PI / points.Length * 2;
+                for (int i = 0; i < points.Length; i++)
+                {
+                    points[i] = new Vector2((float)Math.Sin(rotAdd * i), (float)Math.Cos(rotAdd * i));
+                }
+                circlePositions.Add(circumferencePoints, points);
+                return points;
+            }
+            return circlePositions[circumferencePoints];
+        }
+
     }
 }

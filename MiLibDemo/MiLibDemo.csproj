@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\DLight Trees.png" />
+    <Content Include="Content\DLight Trees_NORMALS.png" />
+    <Content Include="Content\NormalMap.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -9,38 +9,51 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using MiLib.Collision;
+using MiLib.CoreTypes;
 
 namespace MiLibDemo
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        RectangleOBB shape1;
-        RectangleOBB shape2;
         SpriteFont font;
-        bool iscollide = false;
+
+        Vector2 mousePos;
+        OrthographicCamera camera;
+        Texture2D pixel;
+        Effect effect;
+        Texture2D image;
+        Texture2D normal;
+        Vector3 position = Vector3.Zero;
+        float rotation = 0;
+        Vector3 scale = Vector3.One;
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            WindowManager.Initialize(this);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            IsMouseVisible = true;
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            shape1 = new RectangleOBB(new Vector2(100), new Vector2(100), new Vector2(150, 150), GraphicsDevice);
-            shape1.Debug = true;
-            shape2 = new RectangleOBB(new Vector2(100), new Vector2(100), new Vector2(150), GraphicsDevice);
-            shape2.Debug = true;
-
+            WindowManager.IsMouseVisible = true;
+            camera = new OrthographicCamera(new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height));
+            camera.Position = new Vector2(0, 0);
+            
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.White });
             font = Content.Load<SpriteFont>("font");
+            effect = Content.Load<Effect>("NormalMap");
+            effect.Parameters["TextureSampler"].SetValue(image);
+            effect.Parameters["NormalSampler"].SetValue(normal);
+            effect.Parameters["LightDirection"].SetValue(new Vector3(0, 0, 1));
+
+            image = Content.Load<Texture2D>("DLight Trees");
+            normal = Content.Load<Texture2D>("DLight Trees_NORMALS");   
         }
 
         protected override void UnloadContent()
@@ -49,43 +62,40 @@ namespace MiLibDemo
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
+            MouseState ms = Mouse.GetState();
+            mousePos = ms.Position.ToVector2();
             KeyboardState ks = Keyboard.GetState();
-
             if (ks.IsKeyDown(Keys.W))
             {
-                shape2.Position += new Vector2(0, -1);
+                camera.Position += new Vector2(0, 1f);
             }
             if (ks.IsKeyDown(Keys.S))
             {
-                shape2.Position += new Vector2(0, 1);
+                camera.Position -= new Vector2(0, 1f);
             }
             if (ks.IsKeyDown(Keys.A))
             {
-                shape2.Position += new Vector2(-1, 0);
+                camera.Position += new Vector2(1f, 0);
             }
             if (ks.IsKeyDown(Keys.D))
             {
-                shape2.Position += new Vector2(1, 0);
+                camera.Position -= new Vector2(1f, 0);
             }
             if (ks.IsKeyDown(Keys.E))
             {
-                shape2.Rotation += new MiLib.CoreTypes.Rotation(5, MiLib.CoreTypes.AngleMeasure.Degrees);
+                rotation += .1f;
             }
             if (ks.IsKeyDown(Keys.Q))
             {
-                shape2.Rotation += new MiLib.CoreTypes.Rotation(-5, MiLib.CoreTypes.AngleMeasure.Degrees);
+                rotation -= .1f;
             }
-
-            if (shape2.Intersects(shape1))
+            if(ks.IsKeyDown(Keys.OemPlus))
             {
-                iscollide = true;
+                scale += new Vector3(1f);
             }
-            else
+            if (ks.IsKeyDown(Keys.OemMinus))
             {
-                iscollide = false;
+                scale -= new Vector3(1f);
             }
 
             base.Update(gameTime);
@@ -93,16 +103,17 @@ namespace MiLibDemo
 
         protected override void Draw(GameTime gameTime)
         {
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            
 
-            spriteBatch.Begin();
+            WindowManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, effect, null);
 
-            shape1.Draw(spriteBatch);
-            shape2.Draw(spriteBatch);
+            
+            WindowManager.SpriteBatch.DrawString(font, "text", Vector2.Zero, Color.Black);
+            WindowManager.SpriteBatch.Draw(image, position.ToVector2(), null, Color.Lerp(Color.Green, Color.Transparent, .5f), rotation, Vector2.Zero, scale.ToVector2(), SpriteEffects.None, 1);
 
-            spriteBatch.DrawString(font, iscollide.ToString(), Vector2.Zero, Color.Black);
-            spriteBatch.End();
-
+            WindowManager.SpriteBatch.End();
             base.Draw(gameTime);
         }
     }

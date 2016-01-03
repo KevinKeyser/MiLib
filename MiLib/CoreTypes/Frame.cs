@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MiLib.CoreTypes
 {
@@ -23,6 +19,7 @@ namespace MiLib.CoreTypes
             get { return origin; }
             set { origin = value; }
         }
+
         public Frame(Rectangle rectangle)
             : this(rectangle, Vector2.Zero)
         { }
